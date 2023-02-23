@@ -1,0 +1,43 @@
+body{
+    color:crimson;
+    margin: 0em;
+}
+
+.header{
+    padding: 1em 0em;
+    text-align: center;
+    border-bottom: 1px solid crimson;
+    background-color: bisque;
+}
+
+.footer{
+    position: fixed;
+    left: 0em;
+    bottom: 0em;
+    width: 100%;
+    padding: 1em 0em;
+    text-align: center;
+    border-top: 1px solid crimson;
+    background-color: bisque;
+}
+
+.footer a{
+    text-decoration: none;
+    color: crimson;
+    margin: auto 2em;
+}
+
+.footer a:hover{
+    color: brown;
+}
+
+#canvas-container{
+    width: 20em;
+    height: 20em;
+    margin: auto;
+    padding-top: 15em;
+}
+
+#ball-canvas{
+    border: 3px solid crimson;
+}
