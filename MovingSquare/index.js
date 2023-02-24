@@ -9,36 +9,66 @@ canvas.height = canvasDimensions.height;
 const ctx = canvas.getContext("2d");
 
 class InputManager{
+    constructor(movement){
+        this.movement = movement
+    }
     keypress(event){
-        switch (event.keyCode) {
+        switch (event.keyCode){
             case 37:
-               console.log('Left key');
+                movement.moveLeft();
             break;
             case 38:
-                console.log('Up key');
+                movement.moveUp();
             break;
             case 39:
-                console.log('Right key');
+                movement.moveRight();
             break;
             case 40:
-                console.log('Down key');
+                movement.moveDown();
             break;
          }
     }
 }
 
-const inputManager = new InputManager();
-window.addEventListener("keydown", (e) => inputManager.keypress(e))
-
-class Point{
-    constructor(x, y){
-        this.x = x;
-        this.y = y;
+class Movement{
+    constructor(square){
+        this.square = square;
+    }
+    moveLeft(){
+        let newXPosition = this.square.position.x-3;
+        if(newXPosition < 0){
+            newXPosition = 0;
+        }
+        this.square.position.x = newXPosition;
+    }
+    moveUp(){
+        let newYPosition = this.square.position.y-3;
+        if(newYPosition < 0){
+            newYPosition = 0;
+        }
+        this.square.position.y = newYPosition;
+    }
+    moveRight(){
+        let newXPosition = this.square.position.x+3;
+        if(newXPosition > canvasDimensions.width-this.square.size){
+            newXPosition = canvasDimensions.width-this.square.size;
+        }
+        this.square.position.x = newXPosition;
+    }
+    moveDown(){
+        let newYPosition = this.square.position.y+3;
+        if(newYPosition > canvasDimensions.height-this.square.size){
+            newYPosition = canvasDimensions.height-this.square.size;
+        }
+        this.square.position.y = newYPosition;
     }
 }
 
 class SquareFactory{
-    startPosition = new Point(50, 50)
+    startPosition = {
+        x: 50,
+        y: 50
+    }
 
     create(size){
         const square = new Square(this.startPosition, size);
@@ -89,5 +119,9 @@ const drawerManager = new DrawerManager();
 
 const squareFactory = new SquareFactory();
 const square = squareFactory.create(15);
+
+const movement = new Movement(square);
+const inputManager = new InputManager(movement);
+window.addEventListener("keydown", (e) => inputManager.keypress(e))
 
 setInterval(() => drawerManager.draw(), 100);
