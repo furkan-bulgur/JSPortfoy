@@ -23,9 +23,22 @@ class Ball extends CanvasObject{
 }
 
 class Obstacle extends CanvasObject{
-    constructor(position, size){
+    constructor(position){
         super("red");
         this.position = position;
+    }
+}
+
+class CircularObstacle extends Obstacle{
+    constructor(position, rad){
+        super(position);
+        this.rad = rad;
+    }
+}
+
+class RectangularObstacle extends Obstacle{
+    constructor(position, size){
+        super(position);
         this.size = size;
     }
 }
@@ -42,9 +55,20 @@ class BallFactory{
 }
 
 class ObstacleFactory{
-    create(position, size){
-        const obstacle = new Obstacle(position, size);
-        const drawer = new ObstacleDrawer(obstacle);
+    create(obstacleModel){
+        let obstacle;
+        let drawer;
+        switch(obstacleModel.type){
+            case "circular":
+                obstacle = new CircularObstacle(obstacleModel.position, obstacleModel.rad);
+                drawer = new CircularObstacleDrawer(obstacle);
+                break;
+            case "rectangular":
+                obstacle = new RectangularObstacle(obstacleModel.position, obstacleModel.size);
+                drawer = new RectangularObstacleDrawer(obstacle);
+                break;
+
+        }
         drawerManager.add(drawer);
         return obstacle;
     }
@@ -75,7 +99,18 @@ class BallDrawer extends Drawer{
     }
 }
 
-class ObstacleDrawer extends Drawer{
+class CircularObstacleDrawer extends Drawer{
+    constructor(obstacle){
+        super(obstacle);
+        this.obstacle = obstacle;
+    }
+
+    drawShape(){
+        ctx.arc(this.obstacle.position.x, this.obstacle.position.y, this.obstacle.rad, 0, Math.PI * 2);
+    }
+}
+
+class RectangularObstacleDrawer extends Drawer{
     constructor(obstacle){
         super(obstacle);
         this.obstacle = obstacle;
@@ -173,14 +208,24 @@ const ballModel = {
     }
 }
 
-const obstacleInitialValues = {
+const obstacleModel = {
+    type: "circular",
     position:{
         x: 150,
         y: 150
     },
+    rad: 30
+}
+
+const obstacleModel2 = {
+    type: "rectangular",
+    position:{
+        x: 100,
+        y: 100
+    },
     size:{
-        width: 30,
-        height: 100
+        width: 40,
+        height: 60
     }
 }
 
@@ -191,9 +236,8 @@ const ballFactory = new BallFactory();
 const obstacleFactory = new ObstacleFactory();
 
 ballFactory.create(ballModel);
-obstacleFactory.create(obstacleInitialValues.position, obstacleInitialValues.size);
-
-
+obstacleFactory.create(obstacleModel);
+//obstacleFactory.create(obstacleModel2);
 
 setInterval(() => {
     movementManager.update();
