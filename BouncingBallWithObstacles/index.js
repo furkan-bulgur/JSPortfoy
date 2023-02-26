@@ -31,10 +31,12 @@ class Obstacle extends CanvasObject{
 }
 
 class BallFactory{
-    create(position, rad){
-        const ball = new Ball(position, rad);
+    create(ballModel){
+        const ball = new Ball(ballModel.position, ballModel.rad);
         const drawer = new BallDrawer(ball);
+        const movement = new BallMovement(ball, ballModel.movement.speed, ballModel.movement.angle)
         drawerManager.add(drawer);
+        movementManager.add(movement)
         return ball;
     }
 }
@@ -125,12 +127,50 @@ class MovementManager{
     }
 }
 
-const ballInitialValues = {
+class BallMovement{
+    constructor(ball, speed, angle){
+        this.ball = ball;
+        this.speed = speed;
+        this.angle = angle;
+    }
+
+    update(){
+        this.updateAngle();
+        const deltaPosition = this.getDeltaPosition();
+        this.ball.position.x += deltaPosition.x;
+        this.ball.position.y += deltaPosition.y;
+    }
+
+    getDeltaPosition(){
+        const x = Math.cos(Math.PI * this.angle / 180) * this.speed;
+        const y = Math.sin(Math.PI * this.angle / 180) * this.speed;
+
+        return {
+            x: x,
+            y: y
+        }
+    }
+
+    updateAngle(){
+        if (this.ball.position.x + this.ball.rad >= canvasDimensions.width || this.ball.position.x - this.ball.rad <= 0){
+            this.angle = 180 - this.angle;
+        }
+        if (this.ball.position.y + this.ball.rad >= canvasDimensions.height || this.ball.position.y - this.ball.rad <= 0){
+            this.angle = -this.angle;
+        }
+    }
+}
+
+const ballModel = {
     position:{
         x: 50,
         y: 50
     },
-    rad: 10
+    rad: 10,
+    movement:{
+        speed: 3,
+        angle: 30
+    }
 }
 
 const obstacleInitialValues = {
@@ -139,17 +179,23 @@ const obstacleInitialValues = {
         y: 150
     },
     size:{
-        width: 50,
-        height: 50
+        width: 30,
+        height: 100
     }
 }
 
 const drawerManager = new DrawerManager();
+const movementManager = new MovementManager();
 
 const ballFactory = new BallFactory();
 const obstacleFactory = new ObstacleFactory();
 
-ballFactory.create(ballInitialValues.position, ballInitialValues.rad);
+ballFactory.create(ballModel);
 obstacleFactory.create(obstacleInitialValues.position, obstacleInitialValues.size);
 
-setInterval(() => drawerManager.draw(), 100);
+
+
+setInterval(() => {
+    movementManager.update();
+    drawerManager.draw();
+}, 25);
