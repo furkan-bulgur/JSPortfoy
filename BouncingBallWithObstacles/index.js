@@ -8,47 +8,66 @@ canvas.width = canvasDimensions.width;
 canvas.height = canvasDimensions.height;
 const ctx = canvas.getContext("2d");
 
+const ComponentTypes = {
+    shape: "shape"
+}
+
 class CanvasObject{
-    constructor(color){
+    constructor(){
+        this.components = {};
+    }
+
+    addComponent(componentType, component){
+        switch (componentType) {
+            case ComponentTypes.shape:
+                this.components.shape = component;
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+class ShapeComponent{
+    constructor(color, position){
         this.color = color;
+        this.position = position;
+    }
+}
+
+class CircularShapeComponent extends ShapeComponent{
+    constructor(color, position, rad){
+        super(color, position);
+        this.rad = rad;
+        
+        this.drawer = new CircularDrawer(this);
+        drawerManager.add(this.drawer);
+    }
+}
+
+class RectangularShapeComponent extends ShapeComponent{
+    constructor(color, position, size){
+        super(color, position);
+        this.size = size;
+
+        this.drawer = new RectangularDrawer(this);
+        drawerManager.add(this.drawer);
     }
 }
 
 class Ball extends CanvasObject{
-    constructor(position, rad){
-        super("orange");
-        this.position = position;
-        this.rad = rad;
-    }
 }
 
 class Obstacle extends CanvasObject{
-    constructor(position){
-        super("red");
-        this.position = position;
-    }
-}
-
-class CircularObstacle extends Obstacle{
-    constructor(position, rad){
-        super(position);
-        this.rad = rad;
-    }
-}
-
-class RectangularObstacle extends Obstacle{
-    constructor(position, size){
-        super(position);
-        this.size = size;
-    }
 }
 
 class BallFactory{
     create(ballModel){
-        const ball = new Ball(ballModel.position, ballModel.rad);
-        const drawer = new BallDrawer(ball);
-        const movement = new BallMovement(ball, ballModel.movement.speed, ballModel.movement.angle)
-        drawerManager.add(drawer);
+        const ballShape = new CircularShapeComponent(ballModel.color, ballModel.position, ballModel.rad)
+        const ball = new Ball();
+        ball.addComponent(ComponentTypes.shape, ballShape);
+
+        const movement = new DirectionalMovement(ballShape, ballModel.movement.speed, ballModel.movement.angle)
         movementManager.add(movement)
         return ball;
     }
@@ -57,67 +76,46 @@ class BallFactory{
 class ObstacleFactory{
     create(obstacleModel){
         let obstacle;
-        let drawer;
+        let shape;
         switch(obstacleModel.type){
             case "circular":
-                obstacle = new CircularObstacle(obstacleModel.position, obstacleModel.rad);
-                drawer = new CircularObstacleDrawer(obstacle);
+                obstacle = new Obstacle();
+                shape = new CircularShapeComponent(obstacleModel.color, obstacleModel.position, obstacleModel.rad);
+                obstacle.addComponent(ComponentTypes.shape, shape);
                 break;
             case "rectangular":
-                obstacle = new RectangularObstacle(obstacleModel.position, obstacleModel.size);
-                drawer = new RectangularObstacleDrawer(obstacle);
+                obstacle = new Obstacle();
+                shape = new RectangularShapeComponent(obstacleModel.color, obstacleModel.position, obstacleModel.size);
+                obstacle.addComponent(ComponentTypes.shape, shape);
                 break;
-
         }
-        drawerManager.add(drawer);
         return obstacle;
     }
 }
 
 class Drawer{
-    constructor(canvasObject){
-        this.canvasObject = canvasObject;
+    constructor(shape){
+        this.shape = shape;
     }
 
     draw(){
         ctx.beginPath();
-        ctx.fillStyle = this.canvasObject.color;
+        ctx.fillStyle = this.shape.color;
         this.drawShape();
         ctx.fill();
         ctx.closePath();
     }
 }
 
-class BallDrawer extends Drawer{
-    constructor(ball){
-        super(ball);
-        this.ball = ball;
-    }
-
+class CircularDrawer extends Drawer{
     drawShape(){
-        ctx.arc(this.ball.position.x, this.ball.position.y, this.ball.rad, 0, Math.PI * 2);
+        ctx.arc(this.shape.position.x, this.shape.position.y, this.shape.rad, 0, Math.PI * 2);
     }
 }
 
-class CircularObstacleDrawer extends Drawer{
-    constructor(obstacle){
-        super(obstacle);
-        this.obstacle = obstacle;
-    }
-
+class RectangularDrawer extends Drawer{
     drawShape(){
-        ctx.arc(this.obstacle.position.x, this.obstacle.position.y, this.obstacle.rad, 0, Math.PI * 2);
-    }
-}
-
-class RectangularObstacleDrawer extends Drawer{
-    constructor(obstacle){
-        super(obstacle);
-        this.obstacle = obstacle;
-    }
-
-    drawShape(){
-        ctx.rect(this.obstacle.position.x, this.obstacle.position.y, this.obstacle.size.width, this.obstacle.size.height);
+        ctx.rect(this.shape.position.x, this.shape.position.y, this.shape.size.width, this.shape.size.height);
     }
 }
 
@@ -162,9 +160,9 @@ class MovementManager{
     }
 }
 
-class BallMovement{
-    constructor(ball, speed, angle){
-        this.ball = ball;
+class DirectionalMovement{
+    constructor(shape, speed, angle){
+        this.shape = shape;
         this.speed = speed;
         this.angle = angle;
     }
@@ -172,8 +170,8 @@ class BallMovement{
     update(){
         this.updateAngle();
         const deltaPosition = this.getDeltaPosition();
-        this.ball.position.x += deltaPosition.x;
-        this.ball.position.y += deltaPosition.y;
+        this.shape.position.x += deltaPosition.x;
+        this.shape.position.y += deltaPosition.y;
     }
 
     getDeltaPosition(){
@@ -187,16 +185,17 @@ class BallMovement{
     }
 
     updateAngle(){
-        if (this.ball.position.x + this.ball.rad >= canvasDimensions.width || this.ball.position.x - this.ball.rad <= 0){
+        if (this.shape.position.x + this.shape.rad >= canvasDimensions.width || this.shape.position.x - this.shape.rad <= 0){
             this.angle = 180 - this.angle;
         }
-        if (this.ball.position.y + this.ball.rad >= canvasDimensions.height || this.ball.position.y - this.ball.rad <= 0){
+        if (this.shape.position.y + this.shape.rad >= canvasDimensions.height || this.shape.position.y - this.shape.rad <= 0){
             this.angle = -this.angle;
         }
     }
 }
 
 const ballModel = {
+    color: "orange",
     position:{
         x: 50,
         y: 50
@@ -210,6 +209,7 @@ const ballModel = {
 
 const obstacleModel = {
     type: "circular",
+    color: "red",
     position:{
         x: 150,
         y: 150
@@ -219,6 +219,7 @@ const obstacleModel = {
 
 const obstacleModel2 = {
     type: "rectangular",
+    color: "green",
     position:{
         x: 100,
         y: 100
@@ -237,7 +238,7 @@ const obstacleFactory = new ObstacleFactory();
 
 ballFactory.create(ballModel);
 obstacleFactory.create(obstacleModel);
-//obstacleFactory.create(obstacleModel2);
+// obstacleFactory.create(obstacleModel2);
 
 setInterval(() => {
     movementManager.update();
