@@ -21,6 +21,7 @@ class CanvasObject{
         switch (componentType) {
             case ComponentTypes.shape:
                 this.components.shape = component;
+                component.parent = this;
                 break;
             default:
                 break;
@@ -28,8 +29,15 @@ class CanvasObject{
     }
 }
 
-class ShapeComponent{
+class CanvasObjectComponent{
+    constructor(){
+        this.parent = null;
+    }
+}
+
+class ShapeComponent extends CanvasObjectComponent{
     constructor(color, position){
+        super();
         this.color = color;
         this.position = position;
     }
