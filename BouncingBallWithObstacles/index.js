@@ -9,7 +9,8 @@ canvas.height = canvasDimensions.height;
 const ctx = canvas.getContext("2d");
 
 const ComponentTypes = {
-    shape: "shape"
+    shape: "shape",
+    collider: "collider"
 }
 
 class CanvasObject{
@@ -63,6 +64,34 @@ class RectangularShapeComponent extends ShapeComponent{
     }
 }
 
+class ColliderComponent extends CanvasObjectComponent{
+    constructor(){
+        super();
+    }
+}
+
+class CircularColliderComponent extends ColliderComponent{
+    constructor(position, rad){
+        super();
+        this.center = {
+            x: position.x + rad/2,
+            y: position.y + rad/2
+        }
+        this.rad = rad;
+    }
+}
+
+class RectangularColliderComponent extends ColliderComponent{
+    constructor(position, size){
+        super();
+        this.center = {
+            x: position.x + size.width/2,
+            y: position.y + size.height/2
+        }
+        this.size = size;
+    }
+}
+
 class Ball extends CanvasObject{
 }
 
@@ -72,8 +101,10 @@ class Obstacle extends CanvasObject{
 class BallFactory{
     create(ballModel){
         const ballShape = new CircularShapeComponent(ballModel.color, ballModel.position, ballModel.rad)
+        const ballCollider = new CircularColliderComponent(ballModel.position, ballModel.rad);
         const ball = new Ball();
         ball.addComponent(ComponentTypes.shape, ballShape);
+        ball.addComponent(ComponentTypes.collider, ballCollider);
 
         const movement = new DirectionalMovement(ballShape, ballModel.movement.speed, ballModel.movement.angle)
         movementManager.add(movement)
