@@ -107,10 +107,10 @@ class CircularColliderComponent extends ColliderComponent{
         const x = this.transform.position.x;
         const y = this.transform.position.y;
         return {
-            leftX: x - this.rad/2,
-            rightX: x + this.rad/2,
-            topY: y - this.rad/2,
-            bottomY: y + this.rad/2,
+            leftX: x - this.rad,
+            rightX: x + this.rad,
+            topY: y - this.rad,
+            bottomY: y + this.rad,
         };
     }
 }
