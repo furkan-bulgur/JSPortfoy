@@ -99,22 +99,18 @@ class CircularColliderComponent extends ColliderComponent{
     constructor(parent, rad){
         super(parent);
         this.rad = rad;
-    }
 
-    calculateCenterPosition(){
-        return {
-            x: this.transform.position.x + this.rad/2,
-            y: this.transform.position.y + this.rad/2
-        }
+        // drawerManager.add(new ColliderDrawer(this.transform, this, "blue"))
     }
 
     getEdgePositions(){
-        const center = this.calculateCenterPosition();
+        const x = this.transform.position.x;
+        const y = this.transform.position.y;
         return {
-            leftX: center.x - this.rad/2,
-            rightX: center.x + this.rad/2,
-            topY: center.y - this.rad/2,
-            bottomY: center.y + this.rad/2,
+            leftX: x - this.rad/2,
+            rightX: x + this.rad/2,
+            topY: y - this.rad/2,
+            bottomY: y + this.rad/2,
         };
     }
 }
@@ -125,20 +121,14 @@ class RectangularColliderComponent extends ColliderComponent{
         this.size = size;
     }
 
-    calculateCenterPosition(){
-        return {
-            x: this.transform.position.x + this.size.width/2,
-            y: this.transform.position.y + this.size.height/2
-        }
-    }
-
     getEdgePositions(){
-        const center = this.calculateCenterPosition();
+        const x = this.transform.position.x;
+        const y = this.transform.position.y;
         return {
-            leftX: this.center.x - this.width/2,
-            rightX: this.center.x + this.width/2,
-            topY: this.center.y - this.height/2,
-            bottomY: this.center.y + this.height/2,
+            leftX: x - this.width/2,
+            rightX: x + this.width/2,
+            topY: y - this.height/2,
+            bottomY: y + this.height/2,
         };
     }
 }
@@ -243,6 +233,23 @@ class ObstacleFactory{
 //#endregion
 
 //#region DRAWER
+
+class ColliderDrawer{
+    constructor(transform, collider, color){
+        this.transform = transform;
+        this.collider = collider;
+        this.color = color;
+    }
+
+    draw(){
+        ctx.beginPath();
+        ctx.fillStyle = this.color;
+        ctx.arc(this.transform.position.x, this.transform.position.y, this.collider.rad, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.closePath();
+    }
+}
+
 class Drawer{
     constructor(transform, shape){
         this.transform = transform
@@ -266,7 +273,9 @@ class CircularDrawer extends Drawer{
 
 class RectangularDrawer extends Drawer{
     drawShape(){
-        ctx.rect(this.transform.position.x, this.transform.position.y, this.shape.size.width, this.shape.size.height);
+        const x = this.transform.position.x - this.shape.size.width / 2;
+        const y = this.transform.position.y - this.shape.size.height / 2;
+        ctx.rect(x, y, this.shape.size.width, this.shape.size.height);
     }
 }
 //#endregion
@@ -354,6 +363,29 @@ const obstacleModel2 = {
     }
 }
 
+const obstacleModel3 = {
+    type: "circular",
+    color: "yellow",
+    position:{
+        x: 0,
+        y: 0
+    },
+    rad: 30
+}
+
+const obstacleModel4 = {
+    type: "rectangular",
+    color: "magenta",
+    position:{
+        x: 0,
+        y: 0
+    },
+    size:{
+        width: 50,
+        height: 50
+    }
+}
+
 //#endregion
 
 const drawerManager = new DrawerManager();
@@ -365,6 +397,8 @@ const obstacleFactory = new ObstacleFactory();
 ballFactory.create(ballModel);
 obstacleFactory.create(obstacleModel);
 // obstacleFactory.create(obstacleModel2);
+// obstacleFactory.create(obstacleModel3);
+// obstacleFactory.create(obstacleModel4);
 
 setInterval(() => {
     movementManager.update();
