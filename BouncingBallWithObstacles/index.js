@@ -11,31 +11,13 @@ const ctx = canvas.getContext("2d");
 const ComponentTypes = {
     shape: "shape",
     collider: "collider",
-    movement: "movement"
+    movement: "movement",
+    transform: "transform"
 }
 
 class CanvasObject{
     constructor(){
         this.components = {};
-    }
-
-    addComponent(componentType, component){
-        switch (componentType) {
-            case ComponentTypes.shape:
-                this.components.shape = component;
-                component.attachParent(this);
-                break;
-            case ComponentTypes.collider:
-                this.components.collider = component;
-                component.attachParent(this);
-                break;
-            case ComponentTypes.movement:
-                this.components.movement = component;
-                component.attachParent(this);
-                break;
-            default:
-                break;
-        }
     }
 
     getComponent(componentType){
@@ -48,115 +30,110 @@ class CanvasObject{
 }
 
 class CanvasObjectComponent{
-    constructor(){
-        this.parent = null;
-    }
-
-    attachParent(parent){
+    constructor(parent, componentType){
         this.parent = parent;
+        this.parent.components[componentType] = this;
     }
 }
 
-class ShapeComponent extends CanvasObjectComponent{
-    constructor(color, position){
-        super();
-        this.color = color;
+//#region TRANSFORM COMPONENT
+
+class TransformComponent extends CanvasObjectComponent{
+    constructor(parent, position){
+        super(parent, ComponentTypes.transform);
+
         this.position = position;
     }
 
     updatePosition(deltaPosition){
         this.position.x += deltaPosition.x;
         this.position.y += deltaPosition.y;
+    }
+}
 
-        let collider = this.parent.getComponent(ComponentTypes.collider);
-        if(collider != null){
-            collider.updateCenterPosition(deltaPosition);
-        }
+//#endregion
+
+//#region SHAPE COMPONENTS
+
+class ShapeComponent extends CanvasObjectComponent{
+    constructor(parent, color){
+        super(parent, ComponentTypes.shape);
+        this.color = color;
+
+        this.transform = this.parent.getComponent(ComponentTypes.transform);
     }
 }
 
 class CircularShapeComponent extends ShapeComponent{
-    constructor(color, position, rad){
-        super(color, position);
+    constructor(parent, color, rad){
+        super(parent, color);
         this.rad = rad;
         
-        this.drawer = new CircularDrawer(this);
-    }
-
-    attachParent(parent){
-        super.attachParent(parent);
+        this.drawer = new CircularDrawer(this.transform, this);
         drawerManager.add(this.drawer);
     }
 }
 
 class RectangularShapeComponent extends ShapeComponent{
-    constructor(color, position, size){
-        super(color, position);
+    constructor(parent, color, size){
+        super(parent, color);
         this.size = size;
 
-        this.drawer = new RectangularDrawer(this);
-    }
-
-    attachParent(parent){
-        super.attachParent(parent);
+        this.drawer = new RectangularDrawer(this.transform, this);
         drawerManager.add(this.drawer);
     }
 }
 
-class ColliderComponent extends CanvasObjectComponent{
-    constructor(position){
-        super();
-        this.center = position;
-    }
+//#endregion
 
-    updateCenterPosition(deltaPosition){
-        this.center.x += deltaPosition.x;
-        this.center.y += deltaPosition.y;
+//#region COLLIDER COMPONENTS
+
+class ColliderComponent extends CanvasObjectComponent{
+    constructor(parent){
+        super(parent, ComponentTypes.collider);
+        this.transform = this.parent.getComponent(ComponentTypes.transform);
     }
 }
 
 class CircularColliderComponent extends ColliderComponent{
-    constructor(position, rad){
-        super(position);
+    constructor(parent, rad){
+        super(parent);
         this.rad = rad;
-        this.center = this.calculateCenterPosition(position);
-
-        console.log(this.center);
     }
 
-    calculateCenterPosition(position){
-        console.log(this.rad);
+    calculateCenterPosition(){
         return {
-            x: position.x + this.rad/2,
-            y: position.y + this.rad/2
+            x: this.transform.position.x + this.rad/2,
+            y: this.transform.position.y + this.rad/2
         }
     }
 
     getEdgePositions(){
+        const center = this.calculateCenterPosition();
         return {
-            leftX: this.center.x - this.rad/2,
-            rightX: this.center.x + this.rad/2,
-            topY: this.center.y - this.rad/2,
-            bottomY: this.center.y + this.rad/2,
+            leftX: center.x - this.rad/2,
+            rightX: center.x + this.rad/2,
+            topY: center.y - this.rad/2,
+            bottomY: center.y + this.rad/2,
         };
     }
 }
 
 class RectangularColliderComponent extends ColliderComponent{
-    constructor(position, size){
-        super(position);
+    constructor(parent, size){
+        super(parent);
         this.size = size;
-        this.center = this.calculateCenterPosition(position);
     }
 
-    calculateCenterPosition(position){
+    calculateCenterPosition(){
         return {
-            x: position.x + this.size.width/2,
-            y: position.y + this.size.height/2
+            x: this.transform.position.x + this.size.width/2,
+            y: this.transform.position.y + this.size.height/2
         }
     }
 
     getEdgePositions(){
+        const center = this.calculateCenterPosition();
         return {
             leftX: this.center.x - this.width/2,
             rightX: this.center.x + this.width/2,
@@ -166,32 +143,32 @@ class RectangularColliderComponent extends ColliderComponent{
     }
 }
 
-class MovementComponenet extends CanvasObjectComponent{
-    constructor(){
-        super();
-    }
+//#endregion
 
-    attachParent(parent){
-        super.attachParent(parent);
+//#region MOVEMENT COMPONENTS
+
+class MovementComponent extends CanvasObjectComponent{
+    constructor(parent){
+        super(parent, ComponentTypes.movement);
+    }
+}
+
+class DirectionalMovementComponent extends MovementComponent{
+    constructor(parent, speed, angle){
+        super(parent);
+        this.speed = speed;
+        this.angle = angle;
+
+        this.transform = this.parent.getComponent(ComponentTypes.transform);
+        this.collider = this.parent.getComponent(ComponentTypes.collider);
+
         movementManager.add(this);
     }
 
-}
-
-class DirectionalMovementComponent extends MovementComponenet{
-    constructor(speed, angle){
-        super();
-        this.speed = speed;
-        this.angle = angle;
-    }
-
     update(){
-        let shape = this.parent.getComponent(ComponentTypes.shape);
-
         this.updateAngle();
         const deltaPosition = this.getDeltaPosition();
-
-        shape.updatePosition(deltaPosition);
+        this.transform.updatePosition(deltaPosition);
     }
 
     getDeltaPosition(){
@@ -205,10 +182,9 @@ class DirectionalMovementComponent extends MovementComponenet{
     }
 
     updateAngle(){
-        let collider = this.parent.getComponent(ComponentTypes.collider);
-        if(collider === null) return;
+        if(this.collider === null) return;
 
-        const edgePositions = collider.getEdgePositions();
+        const edgePositions = this.collider.getEdgePositions();
 
         if (edgePositions.rightX >= canvasDimensions.width || edgePositions.leftX <= 0){
             this.angle = 180 - this.angle;
@@ -219,22 +195,27 @@ class DirectionalMovementComponent extends MovementComponenet{
     }
 }
 
+//#endregion
+
+//#region OBJECTS
+
 class Ball extends CanvasObject{
 }
 
 class Obstacle extends CanvasObject{
 }
 
+//#endregion
+
+//#region FACTORIES
+
 class BallFactory{
     create(ballModel){
-        const ballShape = new CircularShapeComponent(ballModel.color, ballModel.position, ballModel.rad)
-        const ballCollider = new CircularColliderComponent(ballModel.position, ballModel.rad);
-        const ballMovement = new DirectionalMovementComponent(ballModel.movement.speed, ballModel.movement.angle);
         const ball = new Ball();
-
-        ball.addComponent(ComponentTypes.shape, ballShape);
-        ball.addComponent(ComponentTypes.collider, ballCollider);
-        ball.addComponent(ComponentTypes.movement, ballMovement);
+        new TransformComponent(ball, ballModel.position);
+        new CircularShapeComponent(ball, ballModel.color, ballModel.rad);
+        new CircularColliderComponent(ball, ballModel.rad);
+        new DirectionalMovementComponent(ball, ballModel.movement.speed, ballModel.movement.angle);
 
         return ball;
     }
@@ -243,25 +224,28 @@ class BallFactory{
 class ObstacleFactory{
     create(obstacleModel){
         let obstacle;
-        let shape;
         switch(obstacleModel.type){
             case "circular":
                 obstacle = new Obstacle();
-                shape = new CircularShapeComponent(obstacleModel.color, obstacleModel.position, obstacleModel.rad);
-                obstacle.addComponent(ComponentTypes.shape, shape);
+                new TransformComponent(obstacle, obstacleModel.position);
+                new CircularShapeComponent(obstacle, obstacleModel.color, obstacleModel.rad);
                 break;
             case "rectangular":
                 obstacle = new Obstacle();
-                shape = new RectangularShapeComponent(obstacleModel.color, obstacleModel.position, obstacleModel.size);
-                obstacle.addComponent(ComponentTypes.shape, shape);
+                new TransformComponent(obstacle, obstacleModel.position);
+                new RectangularShapeComponent(obstacle, obstacleModel.color, obstacleModel.size);
                 break;
         }
         return obstacle;
     }
 }
 
+//#endregion
+
+//#region DRAWER
 class Drawer{
-    constructor(shape){
+    constructor(transform, shape){
+        this.transform = transform
         this.shape = shape;
     }
 
@@ -276,15 +260,18 @@ class Drawer{
 
 class CircularDrawer extends Drawer{
     drawShape(){
-        ctx.arc(this.shape.position.x, this.shape.position.y, this.shape.rad, 0, Math.PI * 2);
+        ctx.arc(this.transform.position.x, this.transform.position.y, this.shape.rad, 0, Math.PI * 2);
     }
 }
 
 class RectangularDrawer extends Drawer{
     drawShape(){
-        ctx.rect(this.shape.position.x, this.shape.position.y, this.shape.size.width, this.shape.size.height);
+        ctx.rect(this.transform.position.x, this.transform.position.y, this.shape.size.width, this.shape.size.height);
     }
 }
+//#endregion
+
+//#region MANAGERS
 
 class DrawerManager{
     constructor(){
@@ -327,6 +314,10 @@ class MovementManager{
     }
 }
 
+//#endregion
+
+//#region MODELS
+
 const ballModel = {
     color: "orange",
     position:{
@@ -362,6 +353,8 @@ const obstacleModel2 = {
         height: 60
     }
 }
+
+//#endregion
 
 const drawerManager = new DrawerManager();
 const movementManager = new MovementManager();
