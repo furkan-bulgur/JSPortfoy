@@ -9,5 +9,23 @@ canvas.height = canvasDimensions.height;
 const ctx = canvas.getContext("2d");
 
 const grid = new Grid(level);
+const pacman = new Pacman({
+    startCell: grid.getCell({x: 1, y: 1}), 
+    startDirection: Directions.Right
+});
 
-grid.drawGrid();
+const draw = () => {
+    ctx.clearRect(0,0,canvasDimensions.width, canvasDimensions.height)
+    grid.draw();
+    pacman.draw();
+}
+
+const gameLoop = () => {
+    draw()
+}
+
+const startGame = () => {
+    setInterval(gameLoop, 10);
+}
+
+startGame();

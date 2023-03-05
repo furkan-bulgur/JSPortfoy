@@ -54,26 +54,29 @@ class Grid{
     initializeNeighborCellTypes(){
         for(var i = 0; i < levelSize.height; i++) {
             for(var j = 0; j < levelSize.width; j++) {
-                let top, left, bottom, right;
+                let neighborCellTypes = {}
 
-                top = i > 0 ? this.cellMatrix[i - 1][j].type : CellTypes.None;
-                bottom = i < levelSize.height - 1 ? this.cellMatrix[i + 1][j].type : CellTypes.None;
-                right = j < levelSize.width - 1 ? this.cellMatrix[i][j + 1].type : CellTypes.None;
-                left = j > 0 ? this.cellMatrix[i][j - 1].type : CellTypes.None;
-
-                const neighborCellTypes = {
-                    top: top,
-                    bottom: bottom,
-                    right: right,
-                    left: left
-                }
+                neighborCellTypes[Directions.Up] = i > 0 ? this.cellMatrix[i - 1][j].type : CellTypes.None;
+                neighborCellTypes[Directions.Down] = i < levelSize.height - 1 ? this.cellMatrix[i + 1][j].type : CellTypes.None;
+                neighborCellTypes[Directions.Right] = j < levelSize.width - 1 ? this.cellMatrix[i][j + 1].type : CellTypes.None;
+                neighborCellTypes[Directions.Left] = j > 0 ? this.cellMatrix[i][j - 1].type : CellTypes.None;
 
                 this.cellMatrix[i][j].initializeNeighborCellTypes(neighborCellTypes);
             }
         }
     }
 
-    drawGrid(){
+    getCell(coordinate){
+        return this.cellMatrix[coordinate.y][coordinate.x];
+    }
+
+    getCellFromPosition(position){
+        const xCoor = Math.floor(position.x / Cell.size.width);
+        const yCoor = Math.floor(position.y / Cell.size.height);
+        return this.getCell({x: xCoor, y: yCoor});
+    }
+
+    draw(){
         this.cellMatrix.forEach(row => {
             row.forEach(cell => {
                 cell.drawCell();
@@ -101,6 +104,13 @@ class Cell{
         this.neighborCellTypes = neighborCellTypes;
     }
 
+    getCenterPosition(){
+        return{
+            x: this.position.x + Cell.size.width / 2,
+            y: this.position.y + Cell.size.height / 2,
+        }
+    }
+
     drawCell(){}
 }
 
@@ -113,12 +123,14 @@ class WallCell extends Cell{
     initializeNeighborCellTypes(neighborCellTypes){
         super.initializeNeighborCellTypes(neighborCellTypes);
 
-        this.wall.initializeInWallExtensions({
-            top: this.neighborCellTypes.top == CellTypes.Wall ? true : false,
-            left: this.neighborCellTypes.left == CellTypes.Wall ? true : false,
-            bottom: this.neighborCellTypes.bottom == CellTypes.Wall ? true : false,
-            right: this.neighborCellTypes.right == CellTypes.Wall ? true : false,
-        })
+        let extensions = {}
+
+        extensions[Directions.Up] = this.neighborCellTypes[Directions.Up] == CellTypes.Wall ? true : false;
+        extensions[Directions.Left] = this.neighborCellTypes[Directions.Left] == CellTypes.Wall ? true : false,
+        extensions[Directions.Down] = this.neighborCellTypes[Directions.Down] == CellTypes.Wall ? true : false,
+        extensions[Directions.Right] = this.neighborCellTypes[Directions.Right] == CellTypes.Wall ? true : false,
+
+        this.wall.initializeInWallExtensions(extensions)
     }
 
     drawCell(){
@@ -146,7 +158,6 @@ class Wall{
 
     initializeInWallExtensions(extensions){
         this.extensions = extensions;
-        console.log(extensions);
     }
 
     drawWall(){
@@ -164,16 +175,16 @@ class Wall{
         ctx.fillStyle = Wall.inColor;
         ctx.rect(this.inWallPosition.x, this.inWallPosition.y, this.inWallSize.width , this.inWallSize.height);
         
-        if(this.extensions.top){
+        if(this.extensions[Directions.Up]){
             ctx.rect(this.inWallPosition.x, this.inWallPosition.y - Wall.thickness, this.inWallSize.width , Wall.thickness);
         }
-        if(this.extensions.bottom){
+        if(this.extensions[Directions.Down]){
             ctx.rect(this.inWallPosition.x, this.inWallPosition.y + this.inWallSize.height, this.inWallSize.width , Wall.thickness);
         }
-        if(this.extensions.left){
+        if(this.extensions[Directions.Left]){
             ctx.rect(this.inWallPosition.x - Wall.thickness, this.inWallPosition.y, Wall.thickness, this.inWallSize.height);
         }
-        if(this.extensions.right){
+        if(this.extensions[Directions.Right]){
             ctx.rect(this.inWallPosition.x + this.inWallSize.width, this.inWallPosition.y, Wall.thickness, this.inWallSize.height);
         }
 
