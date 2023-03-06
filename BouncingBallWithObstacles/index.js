@@ -15,6 +15,48 @@ const ComponentTypes = {
     transform: "transform"
 }
 
+class VectorUtils{
+    static Sub(vector1, vector2){
+        return {
+            x: vector1.x - vector2.x,
+            y: vector1.y - vector2.y,
+        }
+    }
+
+    static Add(vector1, vector2){
+        return {
+            x: vector1.x + vector2.x,
+            y: vector1.y + vector2.y,
+        }
+    }
+
+    static ScalerMult(vector, scaler){
+        return {
+            x: vector.x * scaler,
+            y: vector.y * scaler,
+        }
+    }
+
+    static ScalerDiv(vector, scaler){
+        return {
+            x: vector.x / scaler,
+            y: vector.y / scaler,
+        }
+    }
+
+    static Dot(vector1, vector2){
+        return vector1.x * vector2.x + vector1.y * vector2.y
+    }
+
+    static Magnitude(vector){
+        return Math.sqrt(Math.pow(vector.x, 2) + Math.pow(vector.y, 2))
+    }
+
+    static Normalize(vector){
+        return VectorUtils.ScalerDiv(vector, VectorUtils.Magnitude(vector));
+    }
+}
+
 class CanvasObject{
     constructor(){
         this.components = {};
@@ -92,6 +134,19 @@ class ColliderComponent extends CanvasObjectComponent{
     constructor(parent){
         super(parent, ComponentTypes.collider);
         this.transform = this.parent.getComponent(ComponentTypes.transform);
+
+        physicsManager.add(this);
+    }
+    
+    getCenter(){
+        return this.transform.position;
+    }
+
+    onCollision(otherCollider){
+        const movement = this.parent.getComponent(ComponentTypes.movement);
+        if(movement != null){
+            movement.onCollision(VectorUtils.Sub(this.getCenter(), otherCollider.getCenter()));
+        }
     }
 }
 
@@ -144,10 +199,9 @@ class MovementComponent extends CanvasObjectComponent{
 }
 
 class DirectionalMovementComponent extends MovementComponent{
-    constructor(parent, speed, angle){
+    constructor(parent, velocity){
         super(parent);
-        this.speed = speed;
-        this.angle = angle;
+        this.velocity = velocity;
 
         this.transform = this.parent.getComponent(ComponentTypes.transform);
         this.collider = this.parent.getComponent(ComponentTypes.collider);
@@ -162,8 +216,8 @@ class DirectionalMovementComponent extends MovementComponent{
     }
 
     getDeltaPosition(){
-        const x = Math.cos(Math.PI * this.angle / 180) * this.speed;
-        const y = Math.sin(Math.PI * this.angle / 180) * this.speed;
+        const x = this.velocity.x;
+        const y = this.velocity.y;
 
         return {
             x: x,
@@ -177,11 +231,20 @@ class DirectionalMovementComponent extends MovementComponent{
         const edgePositions = this.collider.getEdgePositions();
 
         if (edgePositions.rightX >= canvasDimensions.width || edgePositions.leftX <= 0){
-            this.angle = 180 - this.angle;
+            this.velocity.x = -this.velocity.x;
         }
         if (edgePositions.bottomY >= canvasDimensions.height || edgePositions.topY <= 0){
-            this.angle = -this.angle;
+            this.velocity.y = -this.velocity.y;
         }
+    }
+
+    onCollision(centerDiffVector){
+        const n = VectorUtils.Normalize(centerDiffVector);
+        // d - 2(d.n)n
+        const reflection = VectorUtils.Sub(this.velocity, 
+            VectorUtils.ScalerMult(VectorUtils.ScalerMult(n, VectorUtils.Dot(this.velocity, n)), 2));
+        
+        this.velocity = reflection;
     }
 }
 
@@ -205,7 +268,7 @@ class BallFactory{
         new TransformComponent(ball, ballModel.position);
         new CircularShapeComponent(ball, ballModel.color, ballModel.rad);
         new CircularColliderComponent(ball, ballModel.rad);
-        new DirectionalMovementComponent(ball, ballModel.movement.speed, ballModel.movement.angle);
+        new DirectionalMovementComponent(ball, ballModel.velocity);
 
         return ball;
     }
@@ -219,6 +282,7 @@ class ObstacleFactory{
                 obstacle = new Obstacle();
                 new TransformComponent(obstacle, obstacleModel.position);
                 new CircularShapeComponent(obstacle, obstacleModel.color, obstacleModel.rad);
+                new CircularColliderComponent(obstacle, obstacleModel.rad);
                 break;
             case "rectangular":
                 obstacle = new Obstacle();
@@ -323,6 +387,49 @@ class MovementManager{
     }
 }
 
+class PhysicsManager{
+    constructor(){
+        this.colliders = [];
+    }
+
+    add(collider){
+        this.colliders.push(collider);
+    }
+
+    remove(collider){
+        this.collider = this.collider.filter(c => c !== collider);
+    }
+
+    update(){
+        for (let i = 0; i < this.colliders.length - 1; i++) {
+            for (let j = i + 1; j < this.colliders.length; j++) {
+                const collider1 = this.colliders[i];
+                const collider2 = this.colliders[j];
+                this.checkCollision(collider1, collider2);
+            }
+        }
+    }
+
+    checkCollision(collider1, collider2){
+        if(collider1 instanceof CircularColliderComponent && 
+            collider2 instanceof CircularColliderComponent){
+                this.checkTwoCircleCollision(collider1, collider2);
+        }
+    }
+
+    checkTwoCircleCollision(collider1, collider2){
+        const center1 = collider1.getCenter();
+        const center2 = collider2.getCenter();
+        const centerDiff = VectorUtils.Sub(center1, center2);
+        const centerDistance = VectorUtils.Magnitude(centerDiff);
+        const radSum = collider1.rad + collider2.rad;
+        if(centerDistance <= radSum){
+            collider1.onCollision(collider2);
+            collider2.onCollision(collider1);
+        }
+    }
+}
+
 //#endregion
 
 //#region MODELS
@@ -334,9 +441,22 @@ const ballModel = {
         y: 50
     },
     rad: 10,
-    movement:{
-        speed: 3,
-        angle: 30
+    velocity:{
+        x: 3,
+        y: 4
+    }
+}
+
+const ballModel2 = {
+    color: "blue",
+    position:{
+        x: 50,
+        y: 250
+    },
+    rad: 15,
+    velocity:{
+        x: 4,
+        y: 3
     }
 }
 
@@ -344,7 +464,7 @@ const obstacleModel = {
     type: "circular",
     color: "red",
     position:{
-        x: 150,
+        x: 100,
         y: 150
     },
     rad: 30
@@ -367,8 +487,8 @@ const obstacleModel3 = {
     type: "circular",
     color: "yellow",
     position:{
-        x: 0,
-        y: 0
+        x: 200,
+        y: 170
     },
     rad: 30
 }
@@ -390,17 +510,20 @@ const obstacleModel4 = {
 
 const drawerManager = new DrawerManager();
 const movementManager = new MovementManager();
+const physicsManager = new PhysicsManager();
 
 const ballFactory = new BallFactory();
 const obstacleFactory = new ObstacleFactory();
 
 ballFactory.create(ballModel);
+ballFactory.create(ballModel2);
 obstacleFactory.create(obstacleModel);
 // obstacleFactory.create(obstacleModel2);
-// obstacleFactory.create(obstacleModel3);
+obstacleFactory.create(obstacleModel3);
 // obstacleFactory.create(obstacleModel4);
 
 setInterval(() => {
+    physicsManager.update();
     movementManager.update();
     drawerManager.draw();
 }, 25);
