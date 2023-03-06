@@ -3,15 +3,19 @@ const canvasDimensions = {
     height: levelSize.height * Cell.size.height,
 }
 
+const gameLoopInterval = 10;
+
 const canvas = document.getElementById("grid");
 canvas.width = canvasDimensions.width;
 canvas.height = canvasDimensions.height;
 const ctx = canvas.getContext("2d");
 
+const startDirection = Directions.Left;
+
 const grid = new Grid(level);
 const pacman = new Pacman({
     startCell: grid.getCell({x: 1, y: 1}), 
-    startDirection: Directions.Right
+    startDirection: startDirection,
 });
 
 const draw = () => {
@@ -25,7 +29,7 @@ const gameLoop = () => {
 }
 
 const startGame = () => {
-    setInterval(gameLoop, 10);
+    setInterval(gameLoop, gameLoopInterval);
 }
 
 startGame();
