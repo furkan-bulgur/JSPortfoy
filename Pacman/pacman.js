@@ -23,6 +23,8 @@ class Pacman{
 
         this.position = nextPosition;
         this.updateCurrentCell();
+
+        scoreManager.changeScore(levelModel.levelProperties.moveScore);
     }
 
     getNextPosition(){
@@ -78,6 +80,7 @@ class Pacman{
 
     eat(){
         this.currentCell.removeFood();
+        scoreManager.changeScore(levelModel.levelProperties.eatScore);
     }
 
     draw(){
@@ -148,6 +151,14 @@ class PacmanAnimation{
         ctx.arc(pacman.position.x, pacman.position.y, Pacman.radius, (3/4) * Math.PI + rotation, (-1/4) * Math.PI + rotation);
         ctx.fill();
         ctx.closePath();
+    }
+}
+
+class PacmanAI{
+    static waitCount = 1000 / gameLoopInterval;
+
+    constructor(pacman){
+        this.pacman = pacman;
     }
 }
 

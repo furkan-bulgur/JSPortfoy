@@ -4,6 +4,21 @@ const CellTypes = {
     Wall: 2
 }
 
+const levelSize = levelModel.levelSize;
+
+class ScoreManager{
+    constructor(score, text){
+        this.score = score;
+        this.text = text;
+        this.text.innerText = `SCORE: ${this.score}`;
+    }
+
+    changeScore(change){
+        this.score += change;
+        this.text.innerText = `SCORE: ${this.score}`;
+    }
+}
+
 class Grid{
     constructor(gridMatrix){
         this.cellMatrix = this.createCellMatrix(gridMatrix);

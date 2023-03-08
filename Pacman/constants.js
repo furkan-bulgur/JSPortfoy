@@ -4,3 +4,5 @@ const Directions = {
     Down: "Down",
     Right: "Right"
 }
+
+const gameLoopInterval = 10;

@@ -18,6 +18,16 @@ const levelSize1 = {
     height: level1.length
 }
 
+const levelModel1 = {
+    level: level1,
+    levelSize: levelSize1,
+    score: 300,
+    levelProperties: {
+        moveScore: -1,
+        eatScore: 10
+    }
+}
+
 const level2 = 
 [
     ["#","#","#","#","#","#","#","#","#","#","#","#"],
@@ -42,5 +52,14 @@ const levelSize2 = {
     height: level2.length
 }
 
-const level = level1;
-const levelSize = levelSize1;
+const levelModel2 = {
+    level: level2,
+    levelSize: levelSize2,
+    score: 300,
+    levelProperties: {
+        moveScore: -1,
+        eatScore: 10
+    }
+}
+
+const levelModel = levelModel1;
