@@ -38,8 +38,11 @@ class Grid{
                     case "#":
                         cell = new WallCell(coordinate);
                         break;
+                    case "o":
+                        cell = new EmptyCell(coordinate, true);
+                        break;
                     case " ":
-                        cell = new EmptyCell(coordinate);
+                        cell = new EmptyCell(coordinate, false);
                         break;
                     default:
                         cell = new EmptyCell(coordinate);
@@ -194,7 +197,42 @@ class Wall{
 }
 
 class EmptyCell extends Cell{
-    constructor(coordinate){
+    constructor(coordinate, hasFood){
         super(coordinate, CellTypes.Empty);
+        this.hasFood = hasFood;
+        this.food = null;
+
+        if(this.hasFood){
+            this.food = new Food(this);
+        }
+    }
+
+    removeFood(){
+        this.hasFood = false;
+        this.food = null;
+    }
+
+    drawCell(){
+        if(this.hasFood){
+            this.food.drawFood();
+        }
+    }
+}
+
+class Food{
+    static color = "white";
+    static rad = 5;
+
+    constructor(parentCell){
+        this.parentCell = parentCell;
+        this.center = parentCell.getCenterPosition();
+    }
+
+    drawFood(){
+        ctx.beginPath();
+        ctx.fillStyle = Food.color;
+        ctx.arc(this.center.x, this.center.y, Food.rad, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath();
     }
 }

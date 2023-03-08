@@ -15,7 +15,6 @@ class Pacman{
 
     move(direction){
         this.direction = direction;
-        console.log(`move: ${this.direction}`);
         const nextPosition = this.getNextPosition();
         const hitPosition = this.getHitPosition(nextPosition);
         const hitCell = grid.getCellFromPosition(hitPosition);
@@ -72,6 +71,13 @@ class Pacman{
 
     updateCurrentCell(){
         this.currentCell = grid.getCellFromPosition(this.position);
+        if(this.currentCell.hasFood){
+            this.eat();
+        }
+    }
+
+    eat(){
+        this.currentCell.removeFood();
     }
 
     draw(){
@@ -152,8 +158,6 @@ class InputManager{
 
     keypress(event){
         if(this.pacman == null) return;
-
-        console.log("tik");
 
         switch (event.keyCode){
             case 37:
