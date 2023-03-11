@@ -6,15 +6,16 @@ class PacmanAIManager{
 
         switch(type){
             case PacmanAITypes.User:
-                this.movementController = createInputManager(this.getMovePacmanFunc(this.pacman));
+                this.movementController = createInputManager(this.getMoveFunc());
                 break;
             case PacmanAITypes.BFS:
+                this.bfs = new BFS(this.getMoveFunc(), this.pacman.currentCell);
                 break;
         }
     }
 
-    getMovePacmanFunc(pacman){
-        return direction => pacman.move(direction);
+    getMoveFunc(){
+        return (pacman => direction => pacman.move(direction))(this.pacman);
     }
 }
 
@@ -27,22 +28,29 @@ class PacmanAI{
 }
 
 class SearchAlgorithm{
+    constructor(moveFunc){
+        this.moveFunc = moveFunc;
+    }
+
     searchFood(startCell){
         return null;
     }
 
     getNeighborEmptyCells(cell){
-        const neighborEmptyCells = cell.neighborCells.filter(cell => {
-            return cell.type == CellTypes.Empty;
-        });
-        console.log(neighborEmptyCells);
-        return neighborEmptyCells;
+        return Object.values(cell.neighborCells).filter(
+            cell => cell.type == CellTypes.Empty
+        );
     }
 }
 
 class BFS extends SearchAlgorithm{
+    constructor(moveFunc, startCell){
+        super(moveFunc);
+        this.searchFood(startCell);
+    }
+
     searchFood(startCell){
-        let frontier = [];
+        let frontier = [startCell];
         let visited = new Set();
     }
 }
