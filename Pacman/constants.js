@@ -5,4 +5,9 @@ const Directions = {
     Right: "Right"
 }
 
+const PacmanAITypes = {
+    User: "User",
+    BFS: "BFS"
+}
+
 const gameLoopInterval = 10;

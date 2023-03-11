@@ -8,8 +8,8 @@ class Pacman{
         this.currentCell = startCell;
         this.position = this.currentCell.getCenterPosition();
         this.direction = startDirection;
-        inputManager.pacman = this;
 
+        this.manager = new PacmanAIManager(this, PacmanAITypes.User);
         this.pacmanAnimation = new PacmanAnimation(this);
     }
 
@@ -153,43 +153,3 @@ class PacmanAnimation{
         ctx.closePath();
     }
 }
-
-class PacmanAI{
-    static waitCount = 1000 / gameLoopInterval;
-
-    constructor(pacman){
-        this.pacman = pacman;
-    }
-}
-
-class InputManager{
-    constructor(){
-        this.pacman = null;
-    }
-
-    keypress(event){
-        if(this.pacman == null) return;
-
-        switch (event.keyCode){
-            case 37:
-            case 65:
-                this.pacman.move(Directions.Left);
-            break;
-            case 38:
-            case 87:
-                this.pacman.move(Directions.Up);
-            break;
-            case 39:
-            case 68:
-                this.pacman.move(Directions.Right);
-            break;
-            case 40:
-            case 83:
-                this.pacman.move(Directions.Down);
-            break;
-         }
-    }
-}
-
-const inputManager = new InputManager();
-window.addEventListener("keydown", (e) => inputManager.keypress(e))

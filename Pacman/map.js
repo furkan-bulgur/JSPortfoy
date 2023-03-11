@@ -72,14 +72,20 @@ class Grid{
     initializeNeighborCellTypes(){
         for(var i = 0; i < levelSize.height; i++) {
             for(var j = 0; j < levelSize.width; j++) {
-                let neighborCellTypes = {}
+                let neighborCells = {};
+                let neighborCellTypes = {};
+
+                neighborCells[Directions.Up] = i > 0 ? this.cellMatrix[i - 1][j] : null;
+                neighborCells[Directions.Down] = i < levelSize.height - 1 ? this.cellMatrix[i + 1][j] : null;
+                neighborCells[Directions.Right] = j < levelSize.width - 1 ? this.cellMatrix[i][j + 1] : null;
+                neighborCells[Directions.Left] = j > 0 ? this.cellMatrix[i][j - 1] : null;
 
                 neighborCellTypes[Directions.Up] = i > 0 ? this.cellMatrix[i - 1][j].type : CellTypes.None;
                 neighborCellTypes[Directions.Down] = i < levelSize.height - 1 ? this.cellMatrix[i + 1][j].type : CellTypes.None;
                 neighborCellTypes[Directions.Right] = j < levelSize.width - 1 ? this.cellMatrix[i][j + 1].type : CellTypes.None;
                 neighborCellTypes[Directions.Left] = j > 0 ? this.cellMatrix[i][j - 1].type : CellTypes.None;
 
-                this.cellMatrix[i][j].initializeNeighborCellTypes(neighborCellTypes);
+                this.cellMatrix[i][j].initializeNeighborCellTypes(neighborCells ,neighborCellTypes);
             }
         }
     }
@@ -118,7 +124,8 @@ class Cell{
         this.type = type;
     }
 
-    initializeNeighborCellTypes(neighborCellTypes){
+    initializeNeighborCellTypes(neighborCells, neighborCellTypes){
+        this.neighborCells = neighborCells;
         this.neighborCellTypes = neighborCellTypes;
     }
 
@@ -138,8 +145,8 @@ class WallCell extends Cell{
         this.wall = new Wall(this.position, Cell.size);
     }
 
-    initializeNeighborCellTypes(neighborCellTypes){
-        super.initializeNeighborCellTypes(neighborCellTypes);
+    initializeNeighborCellTypes(neighborCells, neighborCellTypes){
+        super.initializeNeighborCellTypes(neighborCells, neighborCellTypes);
 
         let extensions = {}
 
