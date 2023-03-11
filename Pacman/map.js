@@ -136,6 +136,12 @@ class Cell{
         }
     }
 
+    getNeighborCellsWithType(type){
+        return Object.values(this.neighborCells).filter(
+            cell => cell.type == type
+        );
+    }
+
     drawCell(){}
 }
 

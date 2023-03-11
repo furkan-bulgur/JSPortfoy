@@ -4,13 +4,11 @@ class PacmanAIManager{
         this.type = type;
         this.movementController = null; 
 
-        switch(type){
-            case PacmanAITypes.User:
-                this.movementController = createInputManager(this.getMoveFunc());
-                break;
-            case PacmanAITypes.BFS:
-                this.bfs = new BFS(this.getMoveFunc(), this.pacman.currentCell);
-                break;
+        if(type == PacmanAITypes.User){
+            this.movementController = createInputManager(this.getMoveFunc());
+        }
+        else{
+            this.movementController = new PacmanAI(this.getMoveFunc(), this.pacman.currentCell, type);
         }
     }
 
@@ -22,36 +20,51 @@ class PacmanAIManager{
 class PacmanAI{
     static waitCount = 1000 / gameLoopInterval;
 
-    constructor(pacman){
-        this.pacman = pacman;
+    constructor(moveFunc, startCell, aiType){
+        this.moveFunc = moveFunc;
+        this.algorithm = null;
+
+        switch (aiType) {
+            case PacmanAITypes.BFS:
+                this.algorithm = new BFS(startCell);
+                break;
+            default:
+                break;
+        }
     }
 }
 
 class SearchAlgorithm{
-    constructor(moveFunc){
-        this.moveFunc = moveFunc;
-    }
-
-    searchFood(startCell){
-        return null;
-    }
-
-    getNeighborEmptyCells(cell){
-        return Object.values(cell.neighborCells).filter(
-            cell => cell.type == CellTypes.Empty
-        );
-    }
 }
 
 class BFS extends SearchAlgorithm{
-    constructor(moveFunc, startCell){
-        super(moveFunc);
-        this.searchFood(startCell);
+    constructor(startCell){
+        super();
+        console.log(this.searchCellForFood(startCell));
     }
 
-    searchFood(startCell){
+    searchCellForFood(startCell){
         let frontier = [startCell];
         let visited = new Set();
+
+        while(frontier.length > 0){
+            let currentCell = frontier.shift();
+
+            if(visited.has(currentCell)) continue;
+            visited.add(currentCell);
+
+            if(currentCell.hasFood){
+                return currentCell;
+            }
+            
+            currentCell.getNeighborCellsWithType(CellTypes.Empty).forEach(cell => {
+                if(!visited.has(cell)) {
+                    frontier.push(cell);
+                }
+            });
+        }
+
+        return null;
     }
 }
 
