@@ -21,8 +21,9 @@ class ScoreManager{
 
 class Grid{
     constructor(gridMatrix){
+        this.pacmanStartCell = null;
         this.cellMatrix = this.createCellMatrix(gridMatrix);
-        this.initializeNeighborCellTypes();
+        this.initializeNeighborCellTypes();   
     }
 
     createEmptyCellMatrix(){
@@ -57,6 +58,10 @@ class Grid{
                         cell = new EmptyCell(coordinate, true);
                         break;
                     case " ":
+                        cell = new EmptyCell(coordinate, false);
+                        break;
+                    case "p":
+                        this.pacmanStartCell = cell;
                         cell = new EmptyCell(coordinate, false);
                         break;
                     default:

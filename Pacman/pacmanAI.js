@@ -2,35 +2,72 @@ class PacmanAIManager{
     constructor(pacman, type){
         this.pacman = pacman;
         this.type = type;
+        this.inputControler = null;
         this.movementController = null; 
 
         if(type == PacmanAITypes.User){
-            this.movementController = createInputManager(this.getMoveFunc());
+            this.inputControler = createInputManager(this.getMoveFuncWithDirection());
         }
         else{
-            this.movementController = new PacmanAI(this.getMoveFunc(), this.pacman.currentCell, type);
+            this.movementController = new PacmanAI(this.getMoveFuncWithTargetCell(), this.pacman.currentCell, type);
         }
     }
 
-    getMoveFunc(){
+    getMoveFuncWithDirection(){
         return (pacman => direction => pacman.move(direction))(this.pacman);
+    }
+
+    getMoveFuncWithTargetCell(){
+        const moveToCell = (pacman, targetCell) => {
+            const pacmanCell = pacman.currentCell;
+            Object.keys(pacmanCell.neighborCells).forEach(direction => {
+                if(pacmanCell.neighborCells[direction] == targetCell){
+                    pacman.move(direction);
+                }
+            })
+        };
+        return (pacman => targetCell => moveToCell(pacman, targetCell))(this.pacman);
+    }
+
+    update(){
+        if(this.movementController != null){
+            this.movementController.update();
+        }
     }
 }
 
 class PacmanAI{
-    static waitCount = 1000 / gameLoopInterval;
+    static waitCount = 250 / gameLoopInterval;
 
-    constructor(moveFunc, startCell, aiType){
-        this.moveFunc = moveFunc;
+    constructor(moveToCellFunc, startCell, aiType){
+        this.moveToCellFunc = moveToCellFunc;
+        this.startCell = startCell;
         this.algorithm = null;
+        this.counter = 0;
 
         switch (aiType) {
             case PacmanAITypes.BFS:
-                this.algorithm = new BFS(startCell);
+                this.algorithm = new BFS();
                 break;
             default:
                 break;
         }
+
+        this.start();
+    }
+
+    start(){
+        this.path = this.algorithm.searchCellForFood(this.startCell);
+        this.path.pop //Remove the cell that pacman stays
+    }
+
+    update(){
+        if(this.counter % PacmanAI.waitCount == 0){
+            this.counter = 0;
+            const nextCell = this.path.pop();
+            this.moveToCellFunc(nextCell);
+        }
+        this.counter += 1;
     }
 }
 
@@ -38,28 +75,23 @@ class SearchAlgorithm{
 }
 
 class BFS extends SearchAlgorithm{
-    constructor(startCell){
-        super();
-        console.log(this.searchCellForFood(startCell));
-    }
-
     searchCellForFood(startCell){
-        let frontier = [startCell];
-        let visited = new Set();
+        let frontier = [[null, startCell]];
+        let visitedPathTree = new PathTree();
 
         while(frontier.length > 0){
-            let currentCell = frontier.shift();
+            let [parent, currentCell] = frontier.shift();
 
-            if(visited.has(currentCell)) continue;
-            visited.add(currentCell);
+            if(visitedPathTree.has(currentCell)) continue;
+            visitedPathTree.add(parent, currentCell);
 
             if(currentCell.hasFood){
-                return currentCell;
+                return PathTreePathFinder.getPathFromRoot(visitedPathTree, currentCell);
             }
             
             currentCell.getNeighborCellsWithType(CellTypes.Empty).forEach(cell => {
-                if(!visited.has(cell)) {
-                    frontier.push(cell);
+                if(!visitedPathTree.has(cell)) {
+                    frontier.push([currentCell, cell]);
                 }
             });
         }

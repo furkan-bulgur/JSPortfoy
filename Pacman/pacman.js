@@ -13,6 +13,10 @@ class Pacman{
         this.pacmanAnimation = new PacmanAnimation(this);
     }
 
+    update(){
+        this.manager.update();
+    }
+
     move(direction){
         this.direction = direction;
         const nextPosition = this.getNextPosition();

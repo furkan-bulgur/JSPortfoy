@@ -25,8 +25,13 @@ const draw = () => {
     pacman.draw();
 }
 
+const update = () => {
+    pacman.update();
+}
+
 const gameLoop = () => {
-    draw()
+    update();
+    draw();
 }
 
 const startGame = () => {
