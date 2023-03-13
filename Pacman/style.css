@@ -1,0 +1,198 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    text-decoration: none;
+    list-style: none;
+}
+
+.banner{
+    width: 100%;
+    height: 100vh;
+    background-image: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,1)),url(pacmanBackground.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+.navbar{
+    width: 85%;
+    margin: auto;
+    padding: 35px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+} 
+
+#pacmanHeader{
+    font-size: 4em;
+    font-family: 'Rubik Iso', cursive;
+    text-align: center;
+    color: #ffd000;
+}
+
+.navbar ul li{
+    list-style: none;
+    display: inline-block;
+    margin: 0 20px;
+    position: relative;
+}
+
+.navbar ul li a{
+    text-decoration: none;
+    color: #ffd000;
+    text-transform: uppercase;
+}
+
+.nav-links li::after{
+    content: '';
+    height: 3px;
+    width: 0;
+    background: #ffd000;
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    transition: 0.5s;
+}
+
+.nav-links li:hover::after{
+    width: 100%;
+}
+
+.content{
+    width: 100%;
+    position: absolute;
+    top: 35%;
+    transform: translateY(-50%);
+    text-align: center;
+    color: #ffd000;
+}
+
+.content h1{
+    font-family: 'Rubik Iso', cursive;
+    font-size: 2em;
+    margin-top: 80px;
+}
+
+.level{
+    width: 200px;
+    padding: 15px 0;
+    text-align: center;
+    margin: 20px 10px;
+    border-radius: 25px;
+    font-weight: bold;
+    border: 2px solid #ffd000;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+span{
+    background: #ffd000;
+    height: 100%;
+    width: 0;
+    border-radius: 25px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: -1;
+    transition: 0.5s;
+}
+
+.level:hover span{
+    width: 100%;
+}
+
+.level:hover{
+    border: none;
+}
+
+.pacmanIcon{
+    position: relative;
+    right: 45vh;
+    top: 25vh;
+    height: 10vh;
+    width: 100vh;
+    display: flex;
+    overflow: hidden;
+    transform: rotate(270deg);
+    align-items: center;
+}
+
+.path{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    animation: eating-path 0.5s linear infinite;
+}
+
+.path::before{
+    content:  "";
+    background-color: #ffd000;
+    height: 1rem;
+    width: 1rem;
+    border-radius: 50%;
+}
+
+@keyframes eating-path{
+    0%{
+        transform: translateX(50%);
+    }
+    100%{
+        transform: translateX(-50%);
+    }
+}
+
+.pacman{
+    position: relative;
+    background: transparent;
+    z-index: 1;
+}
+
+.pacman::before,
+.pacman::after{
+    content: "";
+    position: absolute;
+    top: -35px;
+    display: block;
+    border-radius: 50%;
+    height: 0px;
+    width: 0px;
+}
+
+.pacman::before{
+    animation: chunk-top 0.5s ease infinite;
+    border: 35px solid #ffd000;
+    border-left-color: transparent;
+    border-bottom-color: transparent;
+}
+
+@keyframes chunk-top {
+    0%,
+    100%{
+        transform: rotate(-45deg);
+    }
+    50%{
+        transform: rotate(-80deg);
+    }
+}
+
+.pacman::after{
+    animation: chunk-bottom 0.5s ease infinite;
+    border: 35px solid #ffd000;
+    border-right-color: transparent;
+    border-top-color: transparent;
+}
+
+@keyframes chunk-bottom {
+    0%,
+    100%{
+        transform: rotate(-40deg);
+    }
+    50%{
+        transform: rotate(0deg);
+    }
+}
+
+
