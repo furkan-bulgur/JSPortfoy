@@ -14,6 +14,9 @@ class Pacman{
     }
 
     update(){
+        if(this.currentCell.hasFood){
+            this.eat();
+        }
         this.manager.update();
     }
 
@@ -77,13 +80,10 @@ class Pacman{
 
     updateCurrentCell(){
         this.currentCell = grid.getCellFromPosition(this.position);
-        if(this.currentCell.hasFood){
-            this.eat();
-        }
     }
 
     eat(){
-        this.currentCell.removeFood();
+        grid.foodManager.removeFood(this.currentCell);
         scoreManager.changeScore(levelModel.levelProperties.eatScore);
     }
 

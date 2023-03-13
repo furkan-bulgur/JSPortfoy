@@ -12,7 +12,7 @@ class ScoreManager{
         this.text = text;
         this.text.innerText = `SCORE: ${this.score}`;
     }
-
+    
     changeScore(change){
         this.score += change;
         this.text.innerText = `SCORE: ${this.score}`;
@@ -22,6 +22,8 @@ class ScoreManager{
 class Grid{
     constructor(gridMatrix){
         this.pacmanStartCell = null;
+        this.emptyCells = [];
+        this.foodManager = new FoodManager(this);
         this.cellMatrix = this.createCellMatrix(gridMatrix);
         this.initializeNeighborCellTypes();   
     }
@@ -55,23 +57,30 @@ class Grid{
                         cell = new WallCell(coordinate);
                         break;
                     case "o":
-                        cell = new EmptyCell(coordinate, true);
+                        cell = this.createEmptyCell(coordinate);
+                        this.foodManager.addFood(cell);
                         break;
                     case " ":
-                        cell = new EmptyCell(coordinate, false);
+                        cell = this.createEmptyCell(coordinate);
                         break;
                     case "p":
+                        cell = this.createEmptyCell(coordinate);
                         this.pacmanStartCell = cell;
-                        cell = new EmptyCell(coordinate, false);
                         break;
                     default:
-                        cell = new EmptyCell(coordinate);
+                        cell = this.createEmptyCell(coordinate);
                         break;
                 }
                 cellMatrix[i][j] = cell;
             }
         }
         return cellMatrix;
+    }
+
+    createEmptyCell(coordinate){
+        let cell = new EmptyCell(coordinate);
+        this.emptyCells.push(cell);
+        return cell;
     }
 
     initializeNeighborCellTypes(){
@@ -230,14 +239,15 @@ class Wall{
 }
 
 class EmptyCell extends Cell{
-    constructor(coordinate, hasFood){
+    constructor(coordinate){
         super(coordinate, CellTypes.Empty);
-        this.hasFood = hasFood;
+        this.hasFood = false;
         this.food = null;
+    }
 
-        if(this.hasFood){
-            this.food = new Food(this);
-        }
+    addFood(food){
+        this.hasFood = true;
+        this.food = food;
     }
 
     removeFood(){
@@ -252,13 +262,51 @@ class EmptyCell extends Cell{
     }
 }
 
+class FoodManager{
+    static foodCount = 0;
+
+    constructor(grid){
+        this.grid = grid;
+    }
+
+    createFood(center){
+        return new Food(center);
+    }
+    
+    addFood(cell){
+        if(cell.type == CellTypes.Empty && !cell.hasFood){
+            const food = this.createFood(cell.getCenterPosition());
+            cell.addFood(food);
+            FoodManager.foodCount++;
+        }
+    }
+
+    removeFood(cell){
+        if(cell.hasFood){
+            cell.removeFood();
+            FoodManager.foodCount--;
+        }
+    }
+
+    addFoodRandomly(){
+        const cells = this.grid.emptyCells;
+        let cell = cells[Math.floor(Math.random()*cells.length)];
+        this.addFood(cell);
+    }
+
+    update(){
+        if(!FoodManager.foodCount){
+            this.addFoodRandomly();
+        }
+    }
+}
+
 class Food{
-    static color = "white";
+    static color = "orange";
     static rad = 5;
 
-    constructor(parentCell){
-        this.parentCell = parentCell;
-        this.center = parentCell.getCenterPosition();
+    constructor(center){
+        this.center = center;
     }
 
     drawFood(){

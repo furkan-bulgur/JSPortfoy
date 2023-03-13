@@ -58,7 +58,6 @@ class PacmanAI{
 
     start(){
         this.path = this.algorithm.searchCellForFood(this.startCell);
-        this.path.pop //Remove the cell that pacman stays
     }
 
     update(){

@@ -14,7 +14,7 @@ const startDirection = Directions.Left;
 
 const grid = new Grid(levelModel.level);
 const pacman = new Pacman({
-    startCell: grid.getCell({x: 1, y: 1}), 
+    startCell: grid.pacmanStartCell, 
     startDirection: startDirection,
 });
 const scoreManager = new ScoreManager(levelModel.score, scoreText);
@@ -27,6 +27,7 @@ const draw = () => {
 
 const update = () => {
     pacman.update();
+    grid.foodManager.update();
 }
 
 const gameLoop = () => {
