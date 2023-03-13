@@ -9,7 +9,7 @@ class PacmanAIManager{
             this.inputControler = createInputManager(this.getMoveFuncWithDirection());
         }
         else{
-            this.movementController = new PacmanAI(this.getMoveFuncWithTargetCell(), this.pacman.currentCell, type);
+            this.movementController = new PacmanAI(pacman, type);
         }
     }
 
@@ -39,9 +39,8 @@ class PacmanAIManager{
 class PacmanAI{
     static waitCount = 250 / gameLoopInterval;
 
-    constructor(moveToCellFunc, startCell, aiType){
-        this.moveToCellFunc = moveToCellFunc;
-        this.startCell = startCell;
+    constructor(pacman, aiType){
+        this.pacman = pacman;
         this.algorithm = null;
         this.counter = 0;
 
@@ -53,20 +52,32 @@ class PacmanAI{
                 break;
         }
 
-        this.start();
+        this.calculatePath();
     }
 
-    start(){
-        this.path = this.algorithm.searchCellForFood(this.startCell);
+    calculatePath(){
+        this.path = this.algorithm.searchCellForFood(this.pacman.currentCell);
     }
 
     update(){
         if(this.counter % PacmanAI.waitCount == 0){
             this.counter = 0;
             const nextCell = this.path.pop();
-            this.moveToCellFunc(nextCell);
+            this.movePacmanToCell(nextCell);
+        }
+        if(!this.path.length){
+            this.calculatePath();
         }
         this.counter += 1;
+    }
+
+    movePacmanToCell(targetCell){
+        const pacmanCell = this.pacman.currentCell;
+        Object.keys(pacmanCell.neighborCells).forEach(direction => {
+            if(pacmanCell.neighborCells[direction] == targetCell){
+                this.pacman.move(direction);
+            }
+        })
     }
 }
 

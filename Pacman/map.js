@@ -302,16 +302,16 @@ class FoodManager{
 }
 
 class Food{
-    static color = "orange";
     static rad = 5;
 
     constructor(center){
         this.center = center;
+        this.color = `#${Math.floor(Math.random()*16777215).toString(16)}`;
     }
 
     drawFood(){
         ctx.beginPath();
-        ctx.fillStyle = Food.color;
+        ctx.fillStyle = this.color;
         ctx.arc(this.center.x, this.center.y, Food.rad, 0, 2 * Math.PI);
         ctx.fill();
         ctx.closePath();
