@@ -22,7 +22,7 @@ const levelModel1 = {
     level: level1,
     levelSize: levelSize1,
     score: 300,
-    levelProperties: {
+    levelScoreProperties: {
         moveScore: -1,
         eatScore: 10
     }
@@ -56,7 +56,7 @@ const levelModel2 = {
     level: level2,
     levelSize: levelSize2,
     score: 300,
-    levelProperties: {
+    levelScoreProperties: {
         moveScore: -1,
         eatScore: 10
     }
@@ -78,10 +78,10 @@ const levelModel3 = {
     level: level3,
     levelSize: levelSize3,
     score: 300,
-    levelProperties: {
+    levelScoreProperties: {
         moveScore: -1,
         eatScore: 10
     }
 }
 
-const levelModel = levelModel2;
+const levelModels = [levelModel1, levelModel2, levelModel3]

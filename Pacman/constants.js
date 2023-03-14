@@ -10,4 +10,15 @@ const PacmanAITypes = {
     BFS: "BFS"
 }
 
+const CellTypes = {
+    None: 0,
+    Empty: 1,
+    Wall: 2
+}
+
+const ScoreChangeReason = {
+    Move: "move",
+    Eat: "eat"
+}
+
 const gameLoopInterval = 10;

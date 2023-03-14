@@ -1,26 +1,6 @@
-const CellTypes = {
-    None: 0,
-    Empty: 1,
-    Wall: 2
-}
-
-const levelSize = levelModel.levelSize;
-
-class ScoreManager{
-    constructor(score, text){
-        this.score = score;
-        this.text = text;
-        this.text.innerText = `SCORE: ${this.score}`;
-    }
-    
-    changeScore(change){
-        this.score += change;
-        this.text.innerText = `SCORE: ${this.score}`;
-    }
-}
-
 class Grid{
-    constructor(gridMatrix){
+    constructor(gridMatrix, levelSize){
+        this.levelSize = levelSize;
         this.pacmanStartCell = null;
         this.emptyCells = [];
         this.foodManager = new FoodManager(this);
@@ -30,9 +10,9 @@ class Grid{
 
     createEmptyCellMatrix(){
         let cellMatrix = []
-        for(var i = 0; i < levelSize.height; i++) {
+        for(var i = 0; i < this.levelSize.height; i++) {
             cellMatrix[i] = [];
-            for(var j = 0; j < levelSize.width; j++) {
+            for(var j = 0; j < this.levelSize.width; j++) {
                 cellMatrix[i][j] = undefined;
             }
         }
@@ -42,9 +22,9 @@ class Grid{
     createCellMatrix(gridMatrix){
         let cellMatrix = this.createEmptyCellMatrix();
 
-        for (let i = 0; i < levelSize.height; i++) {
+        for (let i = 0; i < this.levelSize.height; i++) {
             const row = gridMatrix[i];
-            for (let j = 0; j < levelSize.width; j++) {
+            for (let j = 0; j < this.levelSize.width; j++) {
                 const cellStr = row[j];
                 let cell;
                 const coordinate = {
@@ -84,19 +64,19 @@ class Grid{
     }
 
     initializeNeighborCellTypes(){
-        for(var i = 0; i < levelSize.height; i++) {
-            for(var j = 0; j < levelSize.width; j++) {
+        for(var i = 0; i < this.levelSize.height; i++) {
+            for(var j = 0; j < this.levelSize.width; j++) {
                 let neighborCells = {};
                 let neighborCellTypes = {};
 
                 neighborCells[Directions.Up] = i > 0 ? this.cellMatrix[i - 1][j] : null;
-                neighborCells[Directions.Down] = i < levelSize.height - 1 ? this.cellMatrix[i + 1][j] : null;
-                neighborCells[Directions.Right] = j < levelSize.width - 1 ? this.cellMatrix[i][j + 1] : null;
+                neighborCells[Directions.Down] = i < this.levelSize.height - 1 ? this.cellMatrix[i + 1][j] : null;
+                neighborCells[Directions.Right] = j < this.levelSize.width - 1 ? this.cellMatrix[i][j + 1] : null;
                 neighborCells[Directions.Left] = j > 0 ? this.cellMatrix[i][j - 1] : null;
 
                 neighborCellTypes[Directions.Up] = i > 0 ? this.cellMatrix[i - 1][j].type : CellTypes.None;
-                neighborCellTypes[Directions.Down] = i < levelSize.height - 1 ? this.cellMatrix[i + 1][j].type : CellTypes.None;
-                neighborCellTypes[Directions.Right] = j < levelSize.width - 1 ? this.cellMatrix[i][j + 1].type : CellTypes.None;
+                neighborCellTypes[Directions.Down] = i < this.levelSize.height - 1 ? this.cellMatrix[i + 1][j].type : CellTypes.None;
+                neighborCellTypes[Directions.Right] = j < this.levelSize.width - 1 ? this.cellMatrix[i][j + 1].type : CellTypes.None;
                 neighborCellTypes[Directions.Left] = j > 0 ? this.cellMatrix[i][j - 1].type : CellTypes.None;
 
                 this.cellMatrix[i][j].initializeNeighborCellTypes(neighborCells ,neighborCellTypes);

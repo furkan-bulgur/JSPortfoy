@@ -23,7 +23,7 @@
     justify-content: space-between;
 } 
 
-#pacmanHeader{
+#pacman-header{
     font-size: 4em;
     font-family: 'Rubik Iso', cursive;
     text-align: center;
@@ -108,7 +108,7 @@ span{
     border: none;
 }
 
-.pacmanIcon{
+.pacman-icon{
     position: relative;
     right: 45vh;
     top: 25vh;

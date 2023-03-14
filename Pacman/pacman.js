@@ -24,14 +24,14 @@ class Pacman{
         this.direction = direction;
         const nextPosition = this.getNextPosition();
         const hitPosition = this.getHitPosition(nextPosition);
-        const hitCell = grid.getCellFromPosition(hitPosition);
+        const hitCell = game.grid.getCellFromPosition(hitPosition);
 
         if(hitCell.type == CellTypes.Wall) return;
 
         this.position = nextPosition;
         this.updateCurrentCell();
 
-        scoreManager.changeScore(levelModel.levelProperties.moveScore);
+        game.scoreManager.changeScore(ScoreChangeReason.Move);
     }
 
     getNextPosition(){
@@ -79,12 +79,12 @@ class Pacman{
     }
 
     updateCurrentCell(){
-        this.currentCell = grid.getCellFromPosition(this.position);
+        this.currentCell = game.grid.getCellFromPosition(this.position);
     }
 
     eat(){
-        grid.foodManager.removeFood(this.currentCell);
-        scoreManager.changeScore(levelModel.levelProperties.eatScore);
+        game.grid.foodManager.removeFood(this.currentCell);
+        game.scoreManager.changeScore(ScoreChangeReason.Eat);
     }
 
     draw(){
@@ -130,13 +130,13 @@ class PacmanAnimation{
 
         ctx.beginPath();
         ctx.fillStyle = Pacman.color;
-        ctx.arc(pacman.position.x, pacman.position.y, Pacman.radius, (1/8) * Math.PI + rotation, (9/8) * Math.PI + rotation);
+        ctx.arc(this.pacman.position.x, this.pacman.position.y, Pacman.radius, (1/8) * Math.PI + rotation, (9/8) * Math.PI + rotation);
         ctx.fill();
         ctx.closePath();
 
         ctx.beginPath();
         ctx.fillStyle = Pacman.color;
-        ctx.arc(pacman.position.x, pacman.position.y, Pacman.radius, (7/8) * Math.PI + rotation, (-1/8) * Math.PI + rotation);
+        ctx.arc(this.pacman.position.x, this.pacman.position.y, Pacman.radius, (7/8) * Math.PI + rotation, (-1/8) * Math.PI + rotation);
         ctx.fill();
         ctx.closePath();
     }
@@ -146,13 +146,13 @@ class PacmanAnimation{
 
         ctx.beginPath();
         ctx.fillStyle = Pacman.color;
-        ctx.arc(pacman.position.x, pacman.position.y, Pacman.radius, (1/4) * Math.PI + rotation, (5/4) * Math.PI + rotation);
+        ctx.arc(this.pacman.position.x, this.pacman.position.y, Pacman.radius, (1/4) * Math.PI + rotation, (5/4) * Math.PI + rotation);
         ctx.fill();
         ctx.closePath();
 
         ctx.beginPath();
         ctx.fillStyle = Pacman.color;
-        ctx.arc(pacman.position.x, pacman.position.y, Pacman.radius, (3/4) * Math.PI + rotation, (-1/4) * Math.PI + rotation);
+        ctx.arc(this.pacman.position.x, this.pacman.position.y, Pacman.radius, (3/4) * Math.PI + rotation, (-1/4) * Math.PI + rotation);
         ctx.fill();
         ctx.closePath();
     }
