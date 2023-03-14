@@ -42,6 +42,7 @@ class PacmanAI{
     constructor(pacman, aiType){
         this.pacman = pacman;
         this.algorithm = null;
+        this.path = [];
         this.counter = 0;
 
         switch (aiType) {
