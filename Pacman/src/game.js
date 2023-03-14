@@ -23,7 +23,6 @@ class ScoreManager{
                 break;
         }
         this.score += change;
-        console.log(this.score);
         this.text.innerText = `SCORE: ${this.score}`;
     }
 }
@@ -44,7 +43,11 @@ class Game{
 
     startGame(){
         const loop = (game) => () => (game.gameLoop())
-        setInterval(loop(this), gameLoopInterval);
+        this.interval = setInterval(loop(this), gameLoopInterval);
+    }
+
+    stopGame(){
+        clearInterval(this.interval);
     }
 
     setCanvas(){
