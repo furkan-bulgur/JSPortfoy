@@ -60,7 +60,11 @@ class PacmanAI{
     }
 
     update(){
-        if(this.counter % PacmanAI.waitCount == 0){
+        if(!this.path.length){
+            this.calculatePath();
+        }
+        
+        if(this.counter % PacmanAI.waitCount == 0 && this.path.length > 0){
             this.counter = 0;
             let nextCell = this.path.pop();
             if(nextCell == this.pacman.currentCell){
@@ -68,9 +72,7 @@ class PacmanAI{
             }
             this.movePacmanToCell(nextCell);
         }
-        if(!this.path.length){
-            this.calculatePath();
-        }
+        
         this.counter += 1;
     }
 
