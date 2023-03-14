@@ -1,4 +1,4 @@
-const levelCount = 3;
+const levelCount = 4;
 const levelButtonContainer = document.getElementById("level-button-container");
 
 
