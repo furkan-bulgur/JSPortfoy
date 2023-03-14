@@ -93,7 +93,7 @@ class Pacman{
 }
 
 class PacmanAnimation{
-    static switchTime = 200;
+    static switchTime = 100;
 
     constructor(pacman){
         this.pacman = pacman;

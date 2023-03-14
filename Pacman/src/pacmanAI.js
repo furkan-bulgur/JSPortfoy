@@ -37,7 +37,7 @@ class PacmanAIManager{
 }
 
 class PacmanAI{
-    static waitCount = 250 / gameLoopInterval;
+    static waitCount = 150 / gameLoopInterval;
 
     constructor(pacman, aiType){
         this.pacman = pacman;
@@ -62,7 +62,10 @@ class PacmanAI{
     update(){
         if(this.counter % PacmanAI.waitCount == 0){
             this.counter = 0;
-            const nextCell = this.path.pop();
+            let nextCell = this.path.pop();
+            if(nextCell == this.pacman.currentCell){
+                nextCell = this.path.pop();
+            }
             this.movePacmanToCell(nextCell);
         }
         if(!this.path.length){
