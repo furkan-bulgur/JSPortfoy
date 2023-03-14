@@ -57,7 +57,7 @@ class PacmanAI{
     }
 
     calculatePath(){
-        this.path = this.algorithm.searchCellForFood(this.pacman.currentCell);
+        this.path = this.algorithm.searchPathToFood(this.pacman.currentCell);
     }
 
     update(){
@@ -91,7 +91,7 @@ class SearchAlgorithm{
 }
 
 class BFS extends SearchAlgorithm{
-    searchCellForFood(startCell){
+    searchPathToFood(startCell){
         let frontier = [[null, startCell]];
         let visitedPathTree = new PathTree();
 
@@ -112,7 +112,7 @@ class BFS extends SearchAlgorithm{
             });
         }
 
-        return null;
+        return [];
     }
 }
 
