@@ -94,6 +94,14 @@ class Grid{
         return this.getCell({x: xCoor, y: yCoor});
     }
 
+    resetCellColors(){
+        this.cellMatrix.forEach(row => {
+            row.forEach(cell => {
+                cell.resetColor();
+            })
+        })
+    }
+
     draw(){
         this.cellMatrix.forEach(row => {
             row.forEach(cell => {
@@ -116,6 +124,7 @@ class Cell{
             y: Cell.size.height * coordinate.y,
         };
         this.type = type;
+        this.color = null;
     }
 
     initializeNeighborCellTypes(neighborCells, neighborCellTypes){
@@ -136,7 +145,23 @@ class Cell{
         );
     }
 
-    drawCell(){}
+    setColor(color){
+        this.color = color;
+    }
+
+    resetColor(){
+        this.color = null;
+    }
+
+    drawCell(){
+        if(this.color){
+            ctx.beginPath();
+            ctx.fillStyle = this.color;
+            ctx.rect(this.position.x, this.position.y, Cell.size.width , Cell.size.height);
+            ctx.fill();
+            ctx.closePath();
+        }
+    }
 }
 
 class WallCell extends Cell{
@@ -159,6 +184,7 @@ class WallCell extends Cell{
     }
 
     drawCell(){
+        super.drawCell();
         this.wall.drawWall();
     }
 }
@@ -236,6 +262,7 @@ class EmptyCell extends Cell{
     }
 
     drawCell(){
+        super.drawCell();
         if(this.hasFood){
             this.food.drawFood();
         }
@@ -286,7 +313,16 @@ class Food{
 
     constructor(center){
         this.center = center;
-        this.color = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+        this.color = this.getRandomColor();
+    }
+
+    getRandomColor(){
+        var letters = '9ABCDEF'.split('');
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * letters.length)];
+        }
+        return color;
     }
 
     drawFood(){

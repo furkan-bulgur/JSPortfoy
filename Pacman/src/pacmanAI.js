@@ -37,12 +37,16 @@ class PacmanAIManager{
 }
 
 class PacmanAI{
-    static waitCount = 150 / gameLoopInterval;
+    static pacmanMoveWaitCount = 150 / gameLoopInterval;
+    static visitedVisualizationWaitCount = 10 / gameLoopInterval;
+    static visitedCellColor = "gray";
+    static pathCellColor = "green";
 
     constructor(pacman, aiType){
         this.pacman = pacman;
         this.algorithm = null;
         this.path = [];
+        this.visitedList = [];
         this.counter = 0;
 
         switch (aiType) {
@@ -57,23 +61,36 @@ class PacmanAI{
     }
 
     calculatePath(){
-        this.path = this.algorithm.searchPathToFood(this.pacman.currentCell);
+        const {path, visitedList} = this.algorithm.searchPathToFood(this.pacman.currentCell);
+        this.path = path;
+        this.visitedList = visitedList;
     }
 
     update(){
         if(!this.path.length){
+            game.grid.resetCellColors();
             this.calculatePath();
         }
-        
-        if(this.counter % PacmanAI.waitCount == 0 && this.path.length > 0){
+
+        if(gameParameters.visualizeCalculation && 
+            this.visitedList.length > 0 && 
+            this.counter % PacmanAI.visitedVisualizationWaitCount == 0){
             this.counter = 0;
+            let visitedCell = this.visitedList.shift();
+            visitedCell.setColor(PacmanAI.visitedCellColor);
+
+            if(!this.visitedList.length){
+                this.path.forEach(cell => cell.setColor(PacmanAI.pathCellColor))
+            }
+        }
+        else if(this.path.length && this.counter % PacmanAI.pacmanMoveWaitCount == 0){
             let nextCell = this.path.pop();
             if(nextCell == this.pacman.currentCell){
                 nextCell = this.path.pop();
             }
             this.movePacmanToCell(nextCell);
         }
-        
+
         this.counter += 1;
     }
 
@@ -94,15 +111,20 @@ class BFS extends SearchAlgorithm{
     searchPathToFood(startCell){
         let frontier = [[null, startCell]];
         let visitedPathTree = new PathTree();
+        let visitedVisualizationList = [];
 
         while(frontier.length > 0){
             let [parent, currentCell] = frontier.shift();
 
             if(visitedPathTree.has(currentCell)) continue;
             visitedPathTree.add(parent, currentCell);
+            visitedVisualizationList.push(currentCell);
 
             if(currentCell.hasFood){
-                return PathTreePathFinder.getPathFromRoot(visitedPathTree, currentCell);
+                return {
+                    path: PathTreePathFinder.getPathFromRoot(visitedPathTree, currentCell),
+                    visitedList: visitedVisualizationList,
+                };
             }
             
             currentCell.getNeighborCellsWithType(CellTypes.Empty).forEach(cell => {
@@ -112,7 +134,10 @@ class BFS extends SearchAlgorithm{
             });
         }
 
-        return [];
+        return {
+            path: [],
+            visitedList: visitedVisualizationList,
+        };
     }
 }
 

@@ -1,6 +1,6 @@
 body{
     background-color: black;
-    color:white;
+    color:yellow;
     margin: 0em;
 }
 .header{
@@ -39,4 +39,16 @@ body{
 
 #score{
     text-align: center;
+}
+
+.buttons-container{
+    text-align: center;
+}
+
+.buttons-container button{
+    color: yellow;
+    background-color: black;
+    border-radius: 10px;
+    border-color: yellow;
+    padding: 10px;
 }
