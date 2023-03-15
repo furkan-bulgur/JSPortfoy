@@ -9,7 +9,7 @@ class Pacman{
         this.position = this.currentCell.getCenterPosition();
         this.direction = startDirection;
 
-        this.manager = new PacmanAIManager(this, PacmanAITypes.BFS);
+        this.manager = new PacmanAIManager(this, PacmanAITypes.User);
         this.pacmanAnimation = new PacmanAnimation(this);
     }
 

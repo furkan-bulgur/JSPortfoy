@@ -5,11 +5,17 @@ class PacmanAIManager{
         this.inputControler = null;
         this.movementController = null; 
 
-        if(type == PacmanAITypes.User){
-            this.inputControler = createInputManager(this.getMoveFuncWithDirection());
+        this.setController();
+    }
+
+    setController(){
+        if(this.type == PacmanAITypes.User){
+            this.movementController = null;
+            this.inputControler = createInputManager(this.getMoveFuncWithDirection(), true);
         }
         else{
-            this.movementController = new PacmanAI(pacman, type);
+            this.inputControler = createInputManager(this.getMoveFuncWithDirection(), false);
+            this.movementController = new PacmanAI(this.pacman, this.type);
         }
     }
 
@@ -144,9 +150,14 @@ class BFS extends SearchAlgorithm{
 class InputManager{
     constructor(moveFunc){
         this.moveFunc = moveFunc;
+        this.isActive = null;
     }
 
     keypress(event){
+        if(!this.isActive){
+            console.log(this.isActive);
+            return;
+        }
         switch (event.keyCode){
             case 37:
             case 65:
@@ -164,12 +175,19 @@ class InputManager{
             case 83:
                 this.moveFunc(Directions.Down);
             break;
-         }
+        }  
     }
 }
 
-function createInputManager(moveFunc){
-    const inputManager = new InputManager(moveFunc);
+function createInputManager(moveFunc, isActive){
+    let inputManager = new InputManager(moveFunc);
+    if(isActive){
+        inputManager.isActive = true;
+    }
+    else{
+        inputManager.isActive = false;
+    }
+    console.log("isActive: "+inputManager.isActive);
     window.addEventListener("keydown", (e) => inputManager.keypress(e));
     return inputManager;
 }
