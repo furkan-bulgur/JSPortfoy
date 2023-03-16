@@ -41,9 +41,14 @@ body{
     text-align: center;
 }
 
+.buttons{
+    text-align: center;
+}
+
 .buttons-container{
     padding: 0.5em;
     text-align: center;
+    display: inline-flex;
 }
 
 .buttons-container button{
@@ -53,3 +58,4 @@ body{
     border-color: yellow;
     padding: 10px;
 }
+
