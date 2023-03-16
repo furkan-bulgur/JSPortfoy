@@ -18,9 +18,11 @@ function visualizeCalculation() {
 
 const pacmanAIUserControllerButton = document.getElementById("pacmanAI-user-controller-button");
 const pacmanAIBFSControllerButton = document.getElementById("pacmanAI-BFS-controller-button");
+const pacmanAIDFSControllerButton = document.getElementById("pacmanAI-DFS-controller-button");
 
 pacmanAIUserControllerButton.onclick = UserController;
 pacmanAIBFSControllerButton.onclick = BFSController;
+pacmanAIDFSControllerButton.onclick = DFSController;
 
 function UserController(){
     if(game.pacman.manager.type != PacmanAITypes.User){
@@ -32,6 +34,13 @@ function UserController(){
 function BFSController(){
     if(game.pacman.manager.type != PacmanAITypes.BFS){
         game.pacman.manager.type = PacmanAITypes.BFS;
+        game.pacman.manager.setController();
+    }
+}
+
+function DFSController(){
+    if(game.pacman.manager.type != PacmanAITypes.DFS){
+        game.pacman.manager.type = PacmanAITypes.DFS;
         game.pacman.manager.setController();
     }
 }

@@ -7,7 +7,8 @@ const Directions = {
 
 const PacmanAITypes = {
     User: "User",
-    BFS: "BFS"
+    BFS: "BFS",
+    DFS: "DFS"
 }
 
 const CellTypes = {
