@@ -10,7 +10,7 @@ const createButton = (i) => {
     button.appendChild(text);
     button.className = "level-button";
     button.type = "button";
-    button.onclick = () => location.href = `pacmanGame.html?level=${i}`
+    button.onclick = () => location.href = `game.html?level=${i}`
     levelButtonContainer.appendChild(button)
 }
 
