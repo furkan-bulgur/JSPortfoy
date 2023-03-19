@@ -1,6 +1,4 @@
-const levelCount = 5;
 const levelButtonContainer = document.getElementById("level-button-container");
-
 
 const createButton = (i) => {
     const button = document.createElement("button");
@@ -10,10 +8,10 @@ const createButton = (i) => {
     button.appendChild(text);
     button.className = "level-button";
     button.type = "button";
-    button.onclick = () => location.href = `game.html?level=${i}`
+    button.onclick = () => location.href = "game.html?" + location.href.split("?")[1] + `&level=${i}`
     levelButtonContainer.appendChild(button)
 }
 
-for(let i = 0; i < levelCount; i++){
+for(let i = 0; i < levelModels.length; i++){
     createButton(i);
 }

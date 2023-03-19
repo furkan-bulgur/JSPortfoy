@@ -8,8 +8,6 @@ class Pacman{
         this.currentCell = startCell;
         this.position = this.currentCell.getCenterPosition();
         this.direction = startDirection;
-
-        this.manager = new PacmanAIManager(this, PacmanAITypes.User);
         this.pacmanAnimation = new PacmanAnimation(this);
     }
 
@@ -17,7 +15,6 @@ class Pacman{
         if(this.currentCell.hasFood){
             this.eat();
         }
-        this.manager.update();
     }
 
     move(direction){

@@ -73,7 +73,7 @@
     margin-top: 80px;
 }
 
-.mode-button{
+.level-button{
     width: 200px;
     padding: 15px 0;
     text-align: center;
@@ -100,11 +100,11 @@ span{
     transition: 0.5s;
 }
 
-.mode-button:hover span{
+.level-button:hover span{
     width: 100%;
 }
 
-.mode-button:hover{
+.level-button:hover{
     border: none;
 }
 

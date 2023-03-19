@@ -1,44 +1,40 @@
 const canvas = document.getElementById("grid");
 const ctx = canvas.getContext("2d");
-const scoreText = document.getElementById("score");
-
-class ScoreManager{
-    constructor(scoreChanges, score, text){
-        this.scoreChanges = scoreChanges;
-        this.score = score;
-        this.text = text;
-        this.text.innerText = `SCORE: ${this.score}`;
-    }
-    
-    changeScore(reason){
-        let change = 0;
-        switch (reason) {
-            case ScoreChangeReason.Move:
-                change = this.scoreChanges.moveScore;
-                break;
-            case ScoreChangeReason.Eat:
-                change = this.scoreChanges.eatScore;
-                break;
-            default:
-                break;
-        }
-        this.score += change;
-        this.text.innerText = `SCORE: ${this.score}`;
-    }
-}
 
 class Game{
     static startDirection = Directions.Right;
 
-    constructor(levelIndex){
+    constructor(gameType, levelIndex){
+        this.gameType = gameType;
+        this.setGameStrategy();
         this.levelModel = levelModels[levelIndex];
         this.grid = new Grid(this.levelModel.level, this.levelModel.levelSize);
         this.pacman = new Pacman({
             startCell: this.grid.pacmanStartCell, 
             startDirection: Game.startDirection,
         });
-        this.scoreManager = new ScoreManager(this.levelModel.levelScoreProperties, this.levelModel.score, scoreText);
+        this.setManagers();
         this.setCanvas();
+    }
+
+    setGameStrategy(){
+        console.log(this.gameType);
+        switch(this.gameType){
+            case GameTypes.UserOneFood:
+                this.gameStrategy = new UserOneFoodGameStrategy();
+                break;
+            case GameTypes.BFSOneFood:
+                this.gameStrategy = new BFSOneFoodGameStrategy();
+                break;
+            case GameTypes.DFSOneFood:
+                this.gameStrategy = new DFSOneFoodGameStrategy();
+                break;
+        }
+    }
+
+    setManagers(){
+        this.scoreManager = this.gameStrategy.getScoreManager();
+        this.pacmanManager = this.gameStrategy.getPacmanManager(this.pacman);
     }
 
     startGame(){
@@ -67,6 +63,7 @@ class Game{
     }
 
     update(){
+        this.pacmanManager.update();
         this.pacman.update();
         this.grid.foodManager.update();
     }
