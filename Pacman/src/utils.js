@@ -54,3 +54,98 @@ class PathTreePathFinder{
         return path;
     }
 }
+
+class PriorityQueue{
+// Least priority is most significant
+    static size = 0;
+
+    constructor(){
+        this.heap = []; 
+    }
+
+    getSize(){
+        return this.heap.length;
+    }
+
+    swap(index1, index2){
+        const node = this.heap[index1];
+        this.heap[index1] = this.heap[index2];
+        this.heap[index2] = node;
+    }
+
+    getParentIndex(index){
+        return Math.floor((index-1)/2);
+    }
+
+    getLeftChildIndex(index){
+        return 2 * index + 1;
+    }
+
+    getRightChildIndex(index){
+        return 2 * index + 2;
+    }
+
+    heapifyUp(index){
+        const parentIndex = this.getParentIndex(index);
+        const parent = this.heap[parentIndex];
+        const current = this.heap[index];
+        if(!parent || parent[1] < current[1]){
+            return;
+        }
+        this.swap(parentIndex, index);
+        this.heapifyUp(parentIndex);
+    }
+
+    heapifyDown(index){
+        const leftChildIndex = this.getLeftChildIndex(index);
+        const rightChildIndex = this.getRightChildIndex(index)
+
+        const leftChild = this.heap[leftChildIndex];
+        const rightChild = this.heap[rightChildIndex];
+        const current = this.heap[index];
+
+        let minChildIndex;
+        let minChild;
+
+        if(rightChildIndex <= (PriorityQueue.size)){
+            minChildIndex = rightChild[1] < leftChild[1] ? rightChildIndex : leftChildIndex ;
+        }
+        else if(leftChildIndex <= (PriorityQueue.size)){
+            minChildIndex = leftChildIndex;
+        }
+        else {
+            this.swap(PriorityQueue.size, index)
+            return;
+        }
+        
+        minChild = this.heap[minChildIndex];
+
+        this.swap(minChildIndex, index)
+        this.heapifyDown(minChildIndex);              
+    }
+    
+    enqueue(value, priority){
+        const node = [value, priority];
+        this.heap.push(node); 
+        PriorityQueue.size++;
+        this.heapifyUp(this.heap.length-1);
+    }    
+    
+    peek(){
+        return this.heap[0];
+    }
+    
+    isEmpty(){
+        return PriorityQueue.size > 0 ? false : true;
+    }
+    
+    dequeue(index){
+        if(this.isEmpty()){
+            return;
+        }
+        const result = this.heap[0][0];
+        PriorityQueue.size--;
+        this.heapifyDown(index);
+        return result;
+    }
+}

@@ -1,6 +1,5 @@
 class GameStrategy{
     constructor(gameType){
-        console.log(gameType);
         this.gameType = gameType;
         this.setGameModel();
     }

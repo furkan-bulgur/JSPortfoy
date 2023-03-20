@@ -18,7 +18,6 @@ class Game{
     }
 
     setGameStrategy(){
-        console.log(this.gameType);
         switch(this.gameType){
             case GameTypes.UserOneFood:
                 this.gameStrategy = new UserOneFoodGameStrategy();
