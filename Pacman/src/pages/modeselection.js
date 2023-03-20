@@ -13,6 +13,5 @@ const createButton = (gameModel) => {
 }
 
 for(let i = 0; i < gameModels.length; i++){
-    console.log("hey");
     createButton(gameModels[i]);
 }
