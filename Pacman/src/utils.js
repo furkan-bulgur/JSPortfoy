@@ -57,14 +57,9 @@ class PathTreePathFinder{
 
 class PriorityQueue{
 // Least priority is most significant
-    static size = 0;
 
     constructor(){
         this.heap = []; 
-    }
-
-    getSize(){
-        return this.heap.length;
     }
 
     swap(index1, index2){
@@ -107,18 +102,24 @@ class PriorityQueue{
         let minChildIndex;
         let minChild;
 
-        if(rightChildIndex <= (PriorityQueue.size)){
+        if(rightChild && leftChild){
             minChildIndex = rightChild[1] < leftChild[1] ? rightChildIndex : leftChildIndex ;
         }
-        else if(leftChildIndex <= (PriorityQueue.size)){
+        else if(rightChild){
+            minChildIndex = rightChildIndex;
+        }
+        else if(leftChild){
             minChildIndex = leftChildIndex;
         }
         else {
-            this.swap(PriorityQueue.size, index)
             return;
         }
         
         minChild = this.heap[minChildIndex];
+
+        if(minChild[1] > current[1]){
+            return;
+        }
 
         this.swap(minChildIndex, index)
         this.heapifyDown(minChildIndex);              
@@ -127,7 +128,6 @@ class PriorityQueue{
     enqueue(value, priority){
         const node = [value, priority];
         this.heap.push(node); 
-        PriorityQueue.size++;
         this.heapifyUp(this.heap.length-1);
     }    
     
@@ -136,16 +136,23 @@ class PriorityQueue{
     }
     
     isEmpty(){
-        return PriorityQueue.size > 0 ? false : true;
+        return this.heap.length > 0 ? false : true;
     }
     
-    dequeue(index){
+    dequeue(){
         if(this.isEmpty()){
+            console.log("empty");
             return;
         }
         const result = this.heap[0][0];
-        PriorityQueue.size--;
-        this.heapifyDown(index);
+        if(this.heap.length > 1){
+            const last = this.heap.pop();
+            this.heap[0] = last; 
+            this.heapifyDown(0);
+        }
+        else{
+            this.heap.shift();
+        }
         return result;
     }
 }
