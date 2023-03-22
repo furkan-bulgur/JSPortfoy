@@ -9,13 +9,13 @@ const GameTypes = {
     None: "None",
     UserOneFood: "UserOneFood",
     BFSOneFood: "BFSOneFood",
-    DFSOneFood: "DFSOneFood",
+    AStarOneFood: "AStarOneFood",
 }
 
 const PacmanAITypes = {
     User: "User",
     BFS: "BFS",
-    DFS: "DFS"
+    AStar: "AStar"
 }
 
 const CellTypes = {

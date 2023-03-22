@@ -14,33 +14,41 @@ class PathTree{
         }else{
             return null;
         }
+    } 
+
+    getCost(cell){
+        const node = this.getNode(cell);
+        if(node){
+            return node.cost;
+        }
     }
 
-    add(parent, cell){
+    add(parent, cell, cost){
         if(this.has(cell)) return;
 
         const parentNode = this.getNode(parent);
         let newNode = null;
 
         if(parentNode == null && this.rootNode == null){
-            newNode = new PathTreeNode(parentNode, cell);
+            newNode = new PathTreeNode(parentNode, cell, cost);
             this.rootNode = newNode;
             this.visited.set(cell, newNode);
         }
         else if(parentNode != null){
-            newNode = new PathTreeNode(parentNode, cell);
+            newNode = new PathTreeNode(parentNode, cell, cost);
             this.visited.set(cell, newNode);
         }
     }
 }
 
 class PathTreeNode{
-    constructor(parentNode, cell){
+    constructor(parentNode, cell, cost){
         this.parentNode = parentNode;
         this.cell = cell;
+        this.cost = cost;
     }
 }
- 
+
 class PathTreePathFinder{
     static getPathFromRoot(pathTree, cell){
         const path = [];
@@ -138,10 +146,13 @@ class PriorityQueue{
     isEmpty(){
         return this.heap.length > 0 ? false : true;
     }
-    
+
+    size(){
+        return this.heap.length;
+    }
+
     dequeue(){
         if(this.isEmpty()){
-            console.log("empty");
             return;
         }
         const result = this.heap[0][0];

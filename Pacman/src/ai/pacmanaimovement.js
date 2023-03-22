@@ -4,7 +4,8 @@ class PacmanAI{
     static visitedCellColor = "gray";
     static pathCellColor = "green";
 
-    constructor(pacman, aiType){
+    constructor(foodManager, pacman, aiType){
+        this.foodManager = foodManager;
         this.pacman = pacman;
         this.algorithm = null;
         this.path = [];
@@ -15,8 +16,8 @@ class PacmanAI{
             case PacmanAITypes.BFS:
                 this.algorithm = new BFS();
                 break;
-            case PacmanAITypes.DFS:
-                this.algorithm = new DFS();
+            case PacmanAITypes.AStar:
+                this.algorithm = new AStar(this.foodManager);
                 break;
             default:
                 break;

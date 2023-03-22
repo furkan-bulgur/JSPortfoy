@@ -3,6 +3,7 @@ class FoodManager{
 
     constructor(grid){
         this.grid = grid;
+        this.foodCell = null;
     }
 
     createFood(center){
@@ -13,6 +14,7 @@ class FoodManager{
         if(cell.type == CellTypes.Empty && !cell.hasFood){
             const food = this.createFood(cell.getCenterPosition());
             cell.addFood(food);
+            this.foodCell = cell;
             FoodManager.foodCount++;
         }
     }
@@ -20,6 +22,7 @@ class FoodManager{
     removeFood(cell){
         if(cell.hasFood){
             cell.removeFood();
+            this.foodCell = null;
             FoodManager.foodCount--;
         }
     }

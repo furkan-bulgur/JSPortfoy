@@ -1,5 +1,6 @@
 class PacmanManager{
-    constructor(pacman, type){
+    constructor(game, pacman, type){
+        this.game = game;
         this.type = type;
         this.setController(pacman);
     }
@@ -9,7 +10,7 @@ class PacmanManager{
             this.movementController = new PacmanUser(pacman);
         }
         else{
-            this.movementController = new PacmanAI(pacman, this.type);
+            this.movementController = new PacmanAI(this.game.grid.foodManager, pacman, this.type);
         }
     }
 

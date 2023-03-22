@@ -18,8 +18,8 @@ const gameModels = [
         }
     },
     {
-        name: "DFS One Food",
-        type: GameTypes.DFSOneFood,
+        name: "AStar One Food",
+        type: GameTypes.AStarOneFood,
         scoreProperties: {
             initialScore: 300,
             moveScore: -1,

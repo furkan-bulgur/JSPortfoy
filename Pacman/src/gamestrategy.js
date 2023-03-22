@@ -22,8 +22,8 @@ class UserOneFoodGameStrategy extends GameStrategy{
         super(GameTypes.UserOneFood);
     }
 
-    getPacmanManager(pacman){
-        return new PacmanManager(pacman, PacmanAITypes.User);
+    getPacmanManager(game, pacman){
+        return new PacmanManager(game, pacman, PacmanAITypes.User);
     }
 }
 
@@ -32,17 +32,17 @@ class BFSOneFoodGameStrategy extends GameStrategy{
         super(GameTypes.BFSOneFood);
     }
 
-    getPacmanManager(pacman){
-        return new PacmanManager(pacman, PacmanAITypes.BFS);
+    getPacmanManager(game, pacman){
+        return new PacmanManager(game, pacman, PacmanAITypes.BFS);
     }
 }
 
-class DFSOneFoodGameStrategy extends GameStrategy{
+class AStarOneFoodGameStrategy extends GameStrategy{
     constructor(){
-        super(GameTypes.DFSOneFood);
+        super(GameTypes.AStarOneFood);
     }
 
-    getPacmanManager(pacman){
-        return new PacmanManager(pacman, PacmanAITypes.DFS);
+    getPacmanManager(game, pacman){
+        return new PacmanManager(game, pacman, PacmanAITypes.AStar);
     }
 }

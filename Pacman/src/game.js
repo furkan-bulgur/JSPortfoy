@@ -25,15 +25,15 @@ class Game{
             case GameTypes.BFSOneFood:
                 this.gameStrategy = new BFSOneFoodGameStrategy();
                 break;
-            case GameTypes.DFSOneFood:
-                this.gameStrategy = new DFSOneFoodGameStrategy();
+            case GameTypes.AStarOneFood:
+                this.gameStrategy = new AStarOneFoodGameStrategy();
                 break;
         }
     }
 
     setManagers(){
         this.scoreManager = this.gameStrategy.getScoreManager();
-        this.pacmanManager = this.gameStrategy.getPacmanManager(this.pacman);
+        this.pacmanManager = this.gameStrategy.getPacmanManager(this, this.pacman);
     }
 
     startGame(){
