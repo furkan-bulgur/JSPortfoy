@@ -1,7 +1,5 @@
 class Pacman{
-    static speed = 20;
     static radius = 10;
-    static hitRadius = 9;
     static color = "yellow";
 
     constructor({startCell, startDirection}){
@@ -19,64 +17,14 @@ class Pacman{
 
     move(direction){
         this.direction = direction;
-        const nextPosition = this.getNextPosition();
-        const hitPosition = this.getHitPosition(nextPosition);
-        const hitCell = game.grid.getCellFromPosition(hitPosition);
+        const nextCell = this.currentCell.neighborCells[direction];
+        if(!nextCell || nextCell.type == CellTypes.Wall) return;
 
-        if(hitCell.type == CellTypes.Wall) return;
-
+        const nextPosition = nextCell.getCenterPosition();
         this.position = nextPosition;
-        this.updateCurrentCell();
+        this.currentCell = nextCell;
 
         game.scoreManager.changeScore(ScoreChangeReason.Move);
-    }
-
-    getNextPosition(){
-        const newPosition = {
-            x: this.position.x,
-            y: this.position.y
-        }
-
-        if(this.direction == Directions.Left){
-            newPosition.x -= Pacman.speed;
-        }
-        else if(this.direction == Directions.Right){
-            newPosition.x += Pacman.speed;
-        }
-        else if(this.direction == Directions.Up){
-            newPosition.y -= Pacman.speed;
-        }
-        else if(this.direction == Directions.Down){
-            newPosition.y += Pacman.speed;
-        }
-
-        return newPosition;
-    }
-
-    getHitPosition(position){
-        const hitPosition = {
-            x: position.x,
-            y: position.y
-        }
-
-        if(this.direction == Directions.Left){
-            hitPosition.x = hitPosition.x - Pacman.hitRadius;
-        }
-        else if(this.direction == Directions.Right){
-            hitPosition.x = hitPosition.x + Pacman.hitRadius;
-        }
-        else if(this.direction == Directions.Up){
-            hitPosition.y = hitPosition.y - Pacman.hitRadius;
-        }
-        else if(this.direction == Directions.Down){
-            hitPosition.y = hitPosition.y + Pacman.hitRadius;
-        }
-
-        return hitPosition;
-    }
-
-    updateCurrentCell(){
-        this.currentCell = game.grid.getCellFromPosition(this.position);
     }
 
     eat(){
