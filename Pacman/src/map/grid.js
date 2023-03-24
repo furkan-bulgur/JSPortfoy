@@ -3,7 +3,6 @@ class Grid{
         this.levelSize = levelSize;
         this.pacmanStartCell = null;
         this.emptyCells = [];
-        this.foodManager = new FoodManager(this);
         this.cellMatrix = this.createCellMatrix(gridMatrix);
         this.initializeNeighborCellTypes();   
     }
@@ -35,10 +34,6 @@ class Grid{
                 switch (cellStr) {
                     case "#":
                         cell = new WallCell(coordinate);
-                        break;
-                    case "o":
-                        cell = this.createEmptyCell(coordinate);
-                        this.foodManager.addFood(cell);
                         break;
                     case " ":
                         cell = this.createEmptyCell(coordinate);

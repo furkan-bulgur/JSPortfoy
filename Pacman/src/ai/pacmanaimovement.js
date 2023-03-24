@@ -4,8 +4,7 @@ class PacmanAI{
     static visitedCellColor = "gray";
     static pathCellColor = "green";
 
-    constructor(foodManager, pacman, aiType){
-        this.foodManager = foodManager;
+    constructor(pacman, aiType){
         this.pacman = pacman;
         this.algorithm = null;
         this.path = [];
@@ -17,13 +16,11 @@ class PacmanAI{
                 this.algorithm = new BFS();
                 break;
             case PacmanAITypes.AStar:
-                this.algorithm = new AStar(this.foodManager);
+                this.algorithm = new AStar();
                 break;
             default:
                 break;
         }
-
-        this.calculatePath();
     }
 
     calculatePath(){
@@ -34,7 +31,7 @@ class PacmanAI{
 
     update(){
         if(!this.path.length){
-            game.grid.resetCellColors();
+            Game.instance.grid.resetCellColors();
             this.calculatePath();
         }
 

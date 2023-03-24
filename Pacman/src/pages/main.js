@@ -7,13 +7,13 @@ const gameParameters = {
     visualizeCalculation: false,
 }
 
-const game = new Game(gameType, level);
-game.startGame();
+Game.instance.initializeGame(gameType, level);
+Game.instance.startGame();
 
 const visualizeCalculationButton = document.getElementById("visualize-calculation-button");
 visualizeCalculationButton.onclick = visualizeCalculation;
 
 function visualizeCalculation() {
-    game.grid.resetCellColors();
+    Game.instance.grid.resetCellColors();
     gameParameters.visualizeCalculation = !gameParameters.visualizeCalculation;
 }

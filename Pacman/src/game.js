@@ -2,9 +2,15 @@ const canvas = document.getElementById("grid");
 const ctx = canvas.getContext("2d");
 
 class Game{
+    static #instance;
+    static instance = Game.#instance ? Game.#instance : new Game();
     static startDirection = Directions.Right;
 
-    constructor(gameType, levelIndex){
+    constructor(){
+        Game.#instance = this;
+    }
+
+    initializeGame(gameType, levelIndex){
         this.gameType = gameType;
         this.setGameStrategy();
         this.levelModel = levelModels[levelIndex];
@@ -33,7 +39,8 @@ class Game{
 
     setManagers(){
         this.scoreManager = this.gameStrategy.getScoreManager();
-        this.pacmanManager = this.gameStrategy.getPacmanManager(this, this.pacman);
+        this.pacmanManager = this.gameStrategy.getPacmanManager(this.pacman);
+        this.foodManager = this.gameStrategy.getFoodManager(this.grid);
     }
 
     startGame(){
@@ -64,7 +71,7 @@ class Game{
     update(){
         this.pacmanManager.update();
         this.pacman.update();
-        this.grid.foodManager.update();
+        this.foodManager.update();
     }
 
     gameLoop(){

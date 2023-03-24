@@ -24,12 +24,12 @@ class Pacman{
         this.position = nextPosition;
         this.currentCell = nextCell;
 
-        game.scoreManager.changeScore(ScoreChangeReason.Move);
+        Game.instance.scoreManager.changeScore(ScoreChangeReason.Move);
     }
 
     eat(){
-        game.grid.foodManager.removeFood(this.currentCell);
-        game.scoreManager.changeScore(ScoreChangeReason.Eat);
+        Game.instance.foodManager.removeFood(this.currentCell);
+        Game.instance.scoreManager.changeScore(ScoreChangeReason.Eat);
     }
 
     draw(){

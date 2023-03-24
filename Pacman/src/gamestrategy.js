@@ -15,6 +15,10 @@ class GameStrategy{
     getScoreManager(){
         return new ScoreManager(this.gameModel.scoreProperties);
     }
+
+    getFoodManager(grid){
+        return new FoodManager(grid)
+    }
 }
 
 class UserOneFoodGameStrategy extends GameStrategy{
@@ -22,8 +26,8 @@ class UserOneFoodGameStrategy extends GameStrategy{
         super(GameTypes.UserOneFood);
     }
 
-    getPacmanManager(game, pacman){
-        return new PacmanManager(game, pacman, PacmanAITypes.User);
+    getPacmanManager(pacman){
+        return new PacmanManager(pacman, PacmanAITypes.User);
     }
 }
 
@@ -32,8 +36,8 @@ class BFSOneFoodGameStrategy extends GameStrategy{
         super(GameTypes.BFSOneFood);
     }
 
-    getPacmanManager(game, pacman){
-        return new PacmanManager(game, pacman, PacmanAITypes.BFS);
+    getPacmanManager(pacman){
+        return new PacmanManager(pacman, PacmanAITypes.BFS);
     }
 }
 
@@ -42,7 +46,7 @@ class AStarOneFoodGameStrategy extends GameStrategy{
         super(GameTypes.AStarOneFood);
     }
 
-    getPacmanManager(game, pacman){
-        return new PacmanManager(game, pacman, PacmanAITypes.AStar);
+    getPacmanManager(pacman){
+        return new PacmanManager(pacman, PacmanAITypes.AStar);
     }
 }

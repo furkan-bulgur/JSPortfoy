@@ -1,7 +1,4 @@
 class SearchAlgorithm{
-    constructor(foodManager){
-        this.foodManager = foodManager;
-    }
 }
 
 class BFS extends SearchAlgorithm{
@@ -78,7 +75,7 @@ class AStar extends SearchAlgorithm{
     }
 
     manhattanHeuristic(cell){
-        const foodCell = this.foodManager.foodCell;
+        const foodCell = Game.instance.foodManager.foodCell;
         if(!foodCell){
             return -1;
         }
