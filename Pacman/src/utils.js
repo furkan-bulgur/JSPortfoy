@@ -167,3 +167,20 @@ class PriorityQueue{
         return result;
     }
 }
+
+class AnimationUtils{
+    static getRotationRadian(direction){
+        if(direction == Directions.Right){
+            return 0;
+        }
+        else if(direction == Directions.Down){
+            return Math.PI / 2;
+        }
+        else if(direction == Directions.Left){
+            return Math.PI;
+        }
+        else if(direction == Directions.Up){
+            return -Math.PI / 2;
+        }
+    }
+}

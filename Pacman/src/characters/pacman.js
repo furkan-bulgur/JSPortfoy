@@ -1,11 +1,9 @@
-class Pacman{
+class Pacman extends Character{
     static radius = 10;
     static color = "yellow";
 
-    constructor({startCell, startDirection}){
-        this.currentCell = startCell;
-        this.position = this.currentCell.getCenterPosition();
-        this.direction = startDirection;
+    constructor(startCell, startDirection){
+        super(startCell, startDirection);
         this.pacmanAnimation = new PacmanAnimation(this);
     }
 
@@ -13,18 +11,6 @@ class Pacman{
         if(this.currentCell.hasFood){
             this.eat();
         }
-    }
-
-    move(direction){
-        this.direction = direction;
-        const nextCell = this.currentCell.neighborCells[direction];
-        if(!nextCell || nextCell.type == CellTypes.Wall) return;
-
-        const nextPosition = nextCell.getCenterPosition();
-        this.position = nextPosition;
-        this.currentCell = nextCell;
-
-        Game.instance.scoreManager.changeScore(ScoreChangeReason.Move);
     }
 
     eat(){
@@ -55,23 +41,8 @@ class PacmanAnimation{
         this.counter += 1;
     }
 
-    getRotation(){
-        if(this.pacman.direction == Directions.Right){
-            return 0;
-        }
-        else if(this.pacman.direction == Directions.Down){
-            return Math.PI / 2;
-        }
-        else if(this.pacman.direction == Directions.Left){
-            return Math.PI;
-        }
-        else if(this.pacman.direction == Directions.Up){
-            return -Math.PI / 2;
-        }
-    }
-
     drawMouthSmallOpen(){
-        const rotation = this.getRotation();
+        const rotation = AnimationUtils.getRotationRadian(this.pacman.direction);
 
         ctx.beginPath();
         ctx.fillStyle = Pacman.color;
@@ -87,7 +58,7 @@ class PacmanAnimation{
     }
 
     drawMouthLargeOpen(){
-        const rotation = this.getRotation();
+        const rotation = AnimationUtils.getRotationRadian(this.pacman.direction);
 
         ctx.beginPath();
         ctx.fillStyle = Pacman.color;

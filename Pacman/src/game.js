@@ -15,10 +15,12 @@ class Game{
         this.setGameStrategy();
         this.levelModel = levelModels[levelIndex];
         this.grid = new Grid(this.levelModel.level, this.levelModel.levelSize);
-        this.pacman = new Pacman({
-            startCell: this.grid.pacmanStartCell, 
-            startDirection: Game.startDirection,
-        });
+        this.pacman = new Pacman(this.grid.pacmanStartCell, Game.startDirection);
+        this.ghost = new Ghost(this.grid.pacmanStartCell, Game.startDirection);
+        this.sizeProperties = {
+            pacmanRad: Pacman.radius
+
+        }
         this.updateListeners = [];
         this.setManagers();
         this.setCanvas();
@@ -78,6 +80,7 @@ class Game{
         ctx.clearRect(0,0,this.canvasDimensions.width, this.canvasDimensions.height)
         this.grid.draw();
         this.pacman.draw();
+        // this.ghost.draw();
     }
 
     update(){
