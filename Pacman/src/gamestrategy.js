@@ -50,3 +50,13 @@ class AStarOneFoodGameStrategy extends GameStrategy{
         return new PacmanManager(pacman, PacmanAITypes.AStar);
     }
 }
+
+class UserSimpleGhostOneFoodGameStrategy extends GameStrategy{
+    constructor(){
+        super(GameTypes.UserSimpleGhostOneFood);
+    }
+
+    getPacmanManager(pacman){
+        return new PacmanManager(pacman, PacmanAITypes.User);
+    }
+}

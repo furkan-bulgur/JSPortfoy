@@ -1,3 +1,7 @@
+const urlParams = new URLSearchParams(window.location.search);
+const gameTypeStr = urlParams.get("mode")
+const gameType = GameTypes[gameTypeStr];
+
 const levelButtonContainer = document.getElementById("level-button-container");
 
 const createButton = (i) => {
@@ -12,6 +16,6 @@ const createButton = (i) => {
     levelButtonContainer.appendChild(button)
 }
 
-for(let i = 0; i < levelModels.length; i++){
+for(let i = 0; i < LevelController.getLevelCount(gameType); i++){
     createButton(i);
 }

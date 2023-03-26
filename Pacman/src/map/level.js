@@ -183,5 +183,28 @@ const levelModel5 = {
     }
 }
 
+const level6 = 
+[
+    ['#','#','#','#','#','#','#','#','#','#',],
+    ['#','p',' ',' ',' ','#',' ',' ',' ','#',],
+    ['#','#',' ','#',' ',' ',' ','#','#','#',],
+    ['#',' ',' ',' ','#',' ',' ',' ',' ','#',],
+    ['#',' ','#',' ','#',' ','#','#',' ','#',],
+    ['#',' ','#',' ',' ',' ','#',' ',' ','#',],
+    ['#','#','#','#','#','#','#','#','#','#',],
+];
 
-const levelModels = [levelModel1, levelModel2, levelModel3, levelModel4, levelModel5]
+const levelSize6 = {
+    width: level6[0].length,
+    height: level6.length
+}
+
+const levelModel6 = {
+    level: level6,
+    levelSize: levelSize6,
+    score: 300,
+    levelScoreProperties: {
+        moveScore: -1,
+        eatScore: 10
+    }
+}

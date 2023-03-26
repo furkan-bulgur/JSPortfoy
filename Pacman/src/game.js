@@ -10,10 +10,11 @@ class Game{
         Game.#instance = this;
     }
 
-    initializeGame(gameType, levelIndex){
+    initializeGame(gameType, levelController){
         this.gameType = gameType;
+        this.levelController = levelController;
         this.setGameStrategy();
-        this.levelModel = levelModels[levelIndex];
+        this.levelModel = levelController.selectedLevelModel;
         this.grid = new Grid(this.levelModel.level, this.levelModel.levelSize);
         this.pacman = new Pacman(this.grid.pacmanStartCell, Game.startDirection);
         this.ghost = new Ghost(this.grid.pacmanStartCell, Game.startDirection);
@@ -44,6 +45,9 @@ class Game{
                 break;
             case GameTypes.AStarOneFood:
                 this.gameStrategy = new AStarOneFoodGameStrategy();
+                break;
+            case GameTypes.UserSimpleGhostOneFood:
+                this.gameStrategy = new UserSimpleGhostOneFoodGameStrategy();
                 break;
         }
     }

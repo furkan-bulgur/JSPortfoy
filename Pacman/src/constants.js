@@ -10,6 +10,7 @@ const GameTypes = {
     UserOneFood: "UserOneFood",
     BFSOneFood: "BFSOneFood",
     AStarOneFood: "AStarOneFood",
+    UserSimpleGhostOneFood: "UserSimpleGhostOneFood"
 }
 
 const PacmanAITypes = {

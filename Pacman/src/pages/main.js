@@ -7,7 +7,9 @@ const gameParameters = {
     visualizeCalculation: false,
 }
 
-Game.instance.initializeGame(gameType, level);
+const levelController = new LevelController(gameType);
+levelController.selectLevel(level)
+Game.instance.initializeGame(gameType, levelController);
 Game.instance.startGame();
 
 const visualizeCalculationButton = document.getElementById("visualize-calculation-button");
