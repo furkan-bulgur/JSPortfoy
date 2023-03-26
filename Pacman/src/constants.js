@@ -30,3 +30,4 @@ const ScoreChangeReason = {
 }
 
 const gameLoopInterval = 10;
+const aiUpdateInterval = 150;

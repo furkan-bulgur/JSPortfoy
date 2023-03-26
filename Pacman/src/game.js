@@ -19,8 +19,17 @@ class Game{
             startCell: this.grid.pacmanStartCell, 
             startDirection: Game.startDirection,
         });
+        this.updateListeners = [];
         this.setManagers();
         this.setCanvas();
+    }
+
+    addUpdateListener(listener){
+        this.updateListeners.push(listener);
+    }
+
+    removeUpdateListener(listener){
+        this.updateListeners = this.updateListeners.filter(l => l != listener);
     }
 
     setGameStrategy(){
@@ -45,11 +54,14 @@ class Game{
 
     startGame(){
         const loop = (game) => () => (game.gameLoop())
-        this.interval = setInterval(loop(this), gameLoopInterval);
+        const aiUpdate = (game) => () => (game.aiUpdate());
+        this.loopInterval = setInterval(loop(this), gameLoopInterval);
+        this.aiInterval = setInterval(aiUpdate(this), aiUpdateInterval);
     }
 
     stopGame(){
-        clearInterval(this.interval);
+        clearInterval(this.loopInterval);
+        clearInterval(this.aiInterval);
     }
 
     setCanvas(){
@@ -69,9 +81,16 @@ class Game{
     }
 
     update(){
-        this.pacmanManager.update();
         this.pacman.update();
         this.foodManager.update();
+
+        this.updateListeners.forEach(listener => {
+            listener.update();
+        });
+    }
+
+    aiUpdate(){
+        this.pacmanManager.aiUpdate();
     }
 
     gameLoop(){

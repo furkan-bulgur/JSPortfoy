@@ -1,15 +1,10 @@
 class PacmanAI{
-    static pacmanMoveWaitCount = 150 / gameLoopInterval;
-    static visitedVisualizationWaitCount = 10 / gameLoopInterval;
-    static visitedCellColor = "gray";
-    static pathCellColor = "green";
-
     constructor(pacman, aiType){
         this.pacman = pacman;
         this.algorithm = null;
         this.path = [];
         this.visitedList = [];
-        this.counter = 0;
+        this.visualizer = new PathVisualizer();
 
         switch (aiType) {
             case PacmanAITypes.BFS:
@@ -29,32 +24,20 @@ class PacmanAI{
         this.visitedList = visitedList;
     }
 
-    update(){
+    aiUpdate(){
         if(!this.path.length){
-            Game.instance.grid.resetCellColors();
+            this.visualizer.endVisualization();
             this.calculatePath();
+            this.visualizer.tryStartVisualization(this.path, this.visitedList);
         }
 
-        if(gameParameters.visualizeCalculation && 
-            this.visitedList.length > 0 && 
-            this.counter % PacmanAI.visitedVisualizationWaitCount == 0){
-            this.counter = 0;
-            let visitedCell = this.visitedList.shift();
-            visitedCell.setColor(PacmanAI.visitedCellColor);
-
-            if(!this.visitedList.length){
-                this.path.forEach(cell => cell.setColor(PacmanAI.pathCellColor))
-            }
-        }
-        else if(this.path.length && this.counter % PacmanAI.pacmanMoveWaitCount == 0){
+        if(this.visualizer.isVisualizationFinished && this.path.length){
             let nextCell = this.path.pop();
             if(nextCell == this.pacman.currentCell){
                 nextCell = this.path.pop();
             }
             this.movePacmanToCell(nextCell);
         }
-
-        this.counter += 1;
     }
 
     movePacmanToCell(targetCell){

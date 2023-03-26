@@ -13,9 +13,9 @@ class PacmanManager{
         }
     }
 
-    update(){
+    aiUpdate(){
         if(this.movementController != null && this.type != PacmanAITypes.User){
-            this.movementController.update();
+            this.movementController.aiUpdate();
         }
     }
 }
