@@ -105,7 +105,7 @@ class Game{
     }
     
     removeDrawListener(listener){
-        this.drawListeners.filter(l => l != listener);
+        this.drawListeners = this.drawListeners.filter(l => l != listener);
     }
 
     draw(){
