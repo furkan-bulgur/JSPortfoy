@@ -1,53 +1,40 @@
 class Grid{
-    constructor(gridMatrix, levelSize){
-        this.levelSize = levelSize;
-        this.pacmanStartCell = null;
+    constructor(levelData){
+        this.levelSize = levelData.levelSize;
         this.emptyCells = [];
-        this.cellMatrix = this.createCellMatrix(gridMatrix);
+        this.cellMatrix = this.createCellMatrix(levelData.gridMatrix);
         this.initializeNeighborCellTypes();   
-    }
-
-    createEmptyCellMatrix(){
-        let cellMatrix = []
-        for(var i = 0; i < this.levelSize.height; i++) {
-            cellMatrix[i] = [];
-            for(var j = 0; j < this.levelSize.width; j++) {
-                cellMatrix[i][j] = undefined;
-            }
-        }
-        return cellMatrix;
+        Game.instance.addDrawListener(this);
     }
 
     createCellMatrix(gridMatrix){
-        let cellMatrix = this.createEmptyCellMatrix();
+        let cellMatrix = [];
 
         for (let i = 0; i < this.levelSize.height; i++) {
             const row = gridMatrix[i];
+            const cellRow = [];
             for (let j = 0; j < this.levelSize.width; j++) {
-                const cellStr = row[j];
+                const cellType = row[j];
                 let cell;
                 const coordinate = {
                     x: j,
                     y: i
                 }
 
-                switch (cellStr) {
-                    case "#":
+                switch (cellType) {
+                    case CellTypes.Wall:
                         cell = new WallCell(coordinate);
                         break;
-                    case " ":
+                    case CellTypes.Empty:
                         cell = this.createEmptyCell(coordinate);
-                        break;
-                    case "p":
-                        cell = this.createEmptyCell(coordinate);
-                        this.pacmanStartCell = cell;
                         break;
                     default:
                         cell = this.createEmptyCell(coordinate);
                         break;
                 }
-                cellMatrix[i][j] = cell;
+                cellRow.push(cell);
             }
+            cellMatrix.push(cellRow);
         }
         return cellMatrix;
     }

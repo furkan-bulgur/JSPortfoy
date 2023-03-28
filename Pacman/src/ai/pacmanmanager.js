@@ -2,6 +2,7 @@ class PacmanManager{
     constructor(pacman, type){
         this.type = type;
         this.setController(pacman);
+        Game.instance.addAIUpdateListener(this);
     }
     
     setController(pacman){

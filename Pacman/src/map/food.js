@@ -4,6 +4,7 @@ class FoodManager{
     constructor(grid){
         this.grid = grid;
         this.foodCell = null;
+        Game.instance.addUpdateListener(this);
     }
 
     createFood(center){

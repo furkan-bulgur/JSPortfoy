@@ -5,6 +5,8 @@ class Pacman extends Character{
     constructor(startCell, startDirection){
         super(startCell, startDirection);
         this.pacmanAnimation = new PacmanAnimation(this);
+        Game.instance.addDrawListener(this);
+        Game.instance.addUpdateListener(this);
     }
 
     update(){

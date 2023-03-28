@@ -11,28 +11,33 @@ class Game{
     }
 
     initializeGame(gameType, levelController){
+        this.updateListeners = [];
+        this.aiUpdateListeners = [];
+        this.drawListeners = [];
+
         this.gameType = gameType;
         this.levelController = levelController;
         this.setGameStrategy();
         this.levelModel = levelController.selectedLevelModel;
-        this.grid = new Grid(this.levelModel.level, this.levelModel.levelSize);
-        this.pacman = new Pacman(this.grid.pacmanStartCell, Game.startDirection);
-        this.ghost = new Ghost(this.grid.pacmanStartCell, Game.startDirection);
-        this.sizeProperties = {
-            pacmanRad: Pacman.radius
+        this.levelData = new LevelData(this.levelModel.level, this.levelModel.levelSize);
+        this.grid = new Grid(this.levelData);
 
-        }
-        this.updateListeners = [];
+        this.initializePacman();
+        this.initializeGhost();
+        
         this.setManagers();
         this.setCanvas();
     }
 
-    addUpdateListener(listener){
-        this.updateListeners.push(listener);
+    initializePacman(){
+        if(!this.levelData.pacmanCoor) return;
+        this.pacman = new Pacman(this.grid.getCell(this.levelData.pacmanCoor), Game.startDirection);
+        this.pacmanManager = this.gameStrategy.getPacmanManager(this.pacman);
     }
 
-    removeUpdateListener(listener){
-        this.updateListeners = this.updateListeners.filter(l => l != listener);
+    initializeGhost(){
+        if(!this.levelData.ghostCoor) return;
+        this.ghost = new Ghost(this.grid.getCell(this.levelData.ghostCoor), Game.startDirection);
     }
 
     setGameStrategy(){
@@ -54,7 +59,6 @@ class Game{
 
     setManagers(){
         this.scoreManager = this.gameStrategy.getScoreManager();
-        this.pacmanManager = this.gameStrategy.getPacmanManager(this.pacman);
         this.foodManager = this.gameStrategy.getFoodManager(this.grid);
     }
 
@@ -80,24 +84,41 @@ class Game{
         canvas.height = this.canvasDimensions.height;
     }
 
+    addUpdateListener(listener){
+        this.updateListeners.push(listener);
+    }
+
+    removeUpdateListener(listener){
+        this.updateListeners = this.updateListeners.filter(l => l != listener);
+    }
+
+    addAIUpdateListener(listener){
+        this.aiUpdateListeners.push(listener);
+    }
+
+    removeAIUpdateListener(listener){
+        this.aiUpdateListeners = this.updateListeners.filter(l => l != listener);
+    }
+
+    addDrawListener(listener){
+        this.drawListeners.push(listener);
+    }
+    
+    removeDrawListener(listener){
+        this.drawListeners.filter(l => l != listener);
+    }
+
     draw(){
-        ctx.clearRect(0,0,this.canvasDimensions.width, this.canvasDimensions.height)
-        this.grid.draw();
-        this.pacman.draw();
-        // this.ghost.draw();
+        ctx.clearRect(0,0,this.canvasDimensions.width, this.canvasDimensions.height);
+        this.drawListeners.forEach(drawable => drawable.draw());
     }
 
     update(){
-        this.pacman.update();
-        this.foodManager.update();
-
-        this.updateListeners.forEach(listener => {
-            listener.update();
-        });
+        this.updateListeners.forEach(listener => listener.update());
     }
 
     aiUpdate(){
-        this.pacmanManager.aiUpdate();
+        this.aiUpdateListeners.forEach(listener => listener.aiUpdate());
     }
 
     gameLoop(){

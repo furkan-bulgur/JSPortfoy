@@ -7,6 +7,7 @@ class Ghost extends Character{
     constructor(startCell, startDirection){
         super(startCell, startDirection);
         this.ghostAnimation = new GhostAnimation(this);
+        Game.instance.addDrawListener(this);
     }
 
     update(){
