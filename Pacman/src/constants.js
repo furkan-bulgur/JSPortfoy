@@ -26,7 +26,7 @@ const CellTypes = {
 }
 
 const ScoreChangeReason = {
-    Move: "move",
+    Tick: "tick",
     Eat: "eat"
 }
 

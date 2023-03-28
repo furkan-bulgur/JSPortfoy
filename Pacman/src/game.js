@@ -74,6 +74,15 @@ class Game{
         clearInterval(this.aiInterval);
     }
 
+    resetGame(){
+        this.foodManager.reset();
+    }
+
+    gameOver(){
+        this.stopGame();
+        this.scoreManager.showGameOverText();
+    }
+
     setCanvas(){
         this.canvasDimensions = {
             width: this.levelModel.levelSize.width * Cell.size.width,
@@ -118,6 +127,7 @@ class Game{
     }
 
     aiUpdate(){
+        this.scoreManager.changeScore(ScoreChangeReason.Tick);
         this.aiUpdateListeners.forEach(listener => listener.aiUpdate());
     }
 

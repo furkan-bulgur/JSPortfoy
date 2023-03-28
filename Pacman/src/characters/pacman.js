@@ -20,6 +20,10 @@ class Pacman extends Character{
         Game.instance.scoreManager.changeScore(ScoreChangeReason.Eat);
     }
 
+    die(){
+        Game.instance.gameOver();
+    }
+
     draw(){
         this.pacmanAnimation.animate();
     }

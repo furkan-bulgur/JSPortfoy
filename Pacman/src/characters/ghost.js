@@ -8,10 +8,15 @@ class Ghost extends Character{
         super(startCell, startDirection);
         this.ghostAnimation = new GhostAnimation(this);
         Game.instance.addDrawListener(this);
+        Game.instance.addUpdateListener(this);
     }
 
     update(){
-        //TODO: Kill pacman
+        this.currentCell.charactersOnCell.forEach(character => {
+            if(character instanceof Pacman){
+                character.die();
+            }
+        });
     }
 
     draw(){

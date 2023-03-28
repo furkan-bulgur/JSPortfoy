@@ -12,6 +12,15 @@ class Cell{
         };
         this.type = type;
         this.color = null;
+        this.charactersOnCell = [];
+    }
+
+    addCharacterOnCell(character){
+        this.charactersOnCell.push(character);
+    }
+
+    removeCharacterOnCell(character){
+        this.charactersOnCell = this.charactersOnCell.filter(c => c != character);
     }
 
     initializeNeighborCellTypes(neighborCells, neighborCellTypes){

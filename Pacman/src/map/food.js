@@ -7,6 +7,10 @@ class FoodManager{
         Game.instance.addUpdateListener(this);
     }
 
+    reset(){
+        FoodManager.foodCount = 0;
+    }
+
     createFood(center){
         return new Food(center);
     }

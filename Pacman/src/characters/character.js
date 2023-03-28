@@ -12,6 +12,8 @@ class Character{
 
         const nextPosition = nextCell.getCenterPosition();
         this.position = nextPosition;
+        this.currentCell.removeCharacterOnCell(this);
         this.currentCell = nextCell;
+        this.currentCell.addCharacterOnCell(this);
     }
 }
