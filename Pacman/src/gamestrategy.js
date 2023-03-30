@@ -17,7 +17,7 @@ class GameStrategy{
     }
 
     getFoodManager(grid){
-        return new FoodManager(grid)
+        return new FoodManager(grid, 1);
     }
 }
 

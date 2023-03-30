@@ -1,8 +1,9 @@
 class FoodManager{
     static foodCount = 0;
-
-    constructor(grid){
+    
+    constructor(grid, foodAmount){
         this.grid = grid;
+        this.foodAmount = foodAmount;
         this.foodCell = null;
         Game.instance.addUpdateListener(this);
     }
@@ -31,14 +32,23 @@ class FoodManager{
             FoodManager.foodCount--;
         }
     }
-
-    addFoodRandomly(){
+    
+    getAvailableRandomCellForFood(){
         const cells = this.grid.emptyCells;
         let cell = cells[Math.floor(Math.random()*cells.length)];
-        while(cell.hasCharacterOnCell(Pacman.name)){
+        while(cell.hasCharacterOnCell(Pacman.name) || cell.hasFood){
             cell = cells[Math.floor(Math.random()*cells.length)];
         }
-        this.addFood(cell);
+        return cell;
+    }
+
+    addFoodRandomly(){
+        let amount = Math.min(this.grid.emptyCells.length-1, this.foodAmount); //because there is pacman emptyCells.length-1 is used
+        let cell;
+        while(amount--){
+            cell = this.getAvailableRandomCellForFood();
+            this.addFood(cell);
+        }
     }
 
     update(){
