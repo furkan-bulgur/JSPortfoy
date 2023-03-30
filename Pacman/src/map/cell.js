@@ -23,6 +23,16 @@ class Cell{
         this.charactersOnCell = this.charactersOnCell.filter(c => c != character);
     }
 
+    hasCharacterOnCell(classType){
+        let has = false;
+        this.charactersOnCell.forEach(character => {
+            if(character.constructor.name == classType){
+                has = true;
+            }
+        });
+        return has;
+    }
+
     initializeNeighborCellTypes(neighborCells, neighborCellTypes){
         this.neighborCells = neighborCells;
         this.neighborCellTypes = neighborCellTypes;

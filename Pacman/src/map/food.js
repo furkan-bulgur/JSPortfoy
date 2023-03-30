@@ -35,6 +35,9 @@ class FoodManager{
     addFoodRandomly(){
         const cells = this.grid.emptyCells;
         let cell = cells[Math.floor(Math.random()*cells.length)];
+        while(cell.hasCharacterOnCell(Pacman.name)){
+            cell = cells[Math.floor(Math.random()*cells.length)];
+        }
         this.addFood(cell);
     }
 
