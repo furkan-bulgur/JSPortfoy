@@ -1,6 +1,7 @@
 class GameStrategy{
     constructor(gameType){
         this.gameType = gameType;
+        this.foodAmount = 1;
         this.setGameModel();
     }
 
@@ -17,7 +18,7 @@ class GameStrategy{
     }
 
     getFoodManager(grid){
-        return new FoodManager(grid, 1);
+        return new FoodManager(grid, this.foodAmount);
     }
 }
 
@@ -44,6 +45,7 @@ class BFSOneFoodGameStrategy extends GameStrategy{
 class BFSMultipleFoodGameStrategy extends GameStrategy{
     constructor(){
         super(GameTypes.BFSMultipleFood);
+        this.foodAmount = 3;
     }
 
     getPacmanManager(pacman){
