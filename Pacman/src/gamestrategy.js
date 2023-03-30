@@ -41,6 +41,16 @@ class BFSOneFoodGameStrategy extends GameStrategy{
     }
 }
 
+class BFSMultipleFoodGameStrategy extends GameStrategy{
+    constructor(){
+        super(GameTypes.BFSMultipleFood);
+    }
+
+    getPacmanManager(pacman){
+        return new PacmanManager(pacman, PacmanAITypes.BFS);
+    }
+}
+
 class AStarOneFoodGameStrategy extends GameStrategy{
     constructor(){
         super(GameTypes.AStarOneFood);

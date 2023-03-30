@@ -18,6 +18,15 @@ const gameModels = [
         }
     },
     {
+        name: "BFS Multiple Food",
+        type: GameTypes.BFSMultipleFood,
+        scoreProperties: {
+            initialScore: 300,
+            moveScore: -1,
+            eatScore: 10
+        }
+    },
+    {
         name: "AStar One Food",
         type: GameTypes.AStarOneFood,
         scoreProperties: {

@@ -9,6 +9,7 @@ const GameTypes = {
     None: "None",
     UserOneFood: "UserOneFood",
     BFSOneFood: "BFSOneFood",
+    BFSMultipleFood: "BFSMultipleFood",
     AStarOneFood: "AStarOneFood",
     UserSimpleGhostOneFood: "UserSimpleGhostOneFood"
 }

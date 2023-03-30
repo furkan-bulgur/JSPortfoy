@@ -9,6 +9,7 @@ class LevelController{
         switch (gameType) {
             case GameTypes.UserOneFood:
             case GameTypes.BFSOneFood:
+            case GameTypes.BFSMultipleFood:
             case GameTypes.AStarOneFood:
                 this.levelModels = [levelModel1,levelModel2,levelModel3,levelModel4,levelModel5]
                 break;
@@ -24,6 +25,7 @@ class LevelController{
         switch (gameType) {
             case GameTypes.UserOneFood:
             case GameTypes.BFSOneFood:
+            case GameTypes.BFSMultipleFood:
             case GameTypes.AStarOneFood:
                 return 5;
             case GameTypes.UserSimpleGhostOneFood:

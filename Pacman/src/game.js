@@ -48,6 +48,9 @@ class Game{
             case GameTypes.BFSOneFood:
                 this.gameStrategy = new BFSOneFoodGameStrategy();
                 break;
+            case GameTypes.BFSMultipleFood:
+                this.gameStrategy = new BFSMultipleFoodGameStrategy();
+                break;
             case GameTypes.AStarOneFood:
                 this.gameStrategy = new AStarOneFoodGameStrategy();
                 break;
