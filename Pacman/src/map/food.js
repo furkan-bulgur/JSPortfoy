@@ -4,7 +4,7 @@ class FoodManager{
     constructor(grid, foodAmount){
         this.grid = grid;
         this.foodAmount = foodAmount;
-        this.foodCell = null;
+        this.foodCells = [];
         Game.instance.addUpdateListener(this);
     }
 
@@ -20,7 +20,7 @@ class FoodManager{
         if(cell.type == CellTypes.Empty && !cell.hasFood){
             const food = this.createFood(cell.getCenterPosition());
             cell.addFood(food);
-            this.foodCell = cell;
+            this.foodCells.push(cell);
             FoodManager.foodCount++;
         }
     }
@@ -28,7 +28,7 @@ class FoodManager{
     removeFood(cell){
         if(cell.hasFood){
             cell.removeFood();
-            this.foodCell = null;
+            this.foodCells = this.foodCells.filter(c => c != cell)
             FoodManager.foodCount--;
         }
     }

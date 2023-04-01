@@ -75,10 +75,11 @@ class AStar extends SearchAlgorithm{
     }
 
     manhattanHeuristic(cell){
-        const foodCell = Game.instance.foodManager.foodCell;
-        if(!foodCell){
+        const foodCells = Game.instance.foodManager.foodCells;
+        if(!foodCells.length){
             return -1;
         }
+        const foodCell = foodCells[0];
         const distanceX = foodCell.coordinate.x - cell.coordinate.x;
         const distanceY = foodCell.coordinate.y - cell.coordinate.y;
         return Math.abs(distanceX) + Math.abs(distanceY);
