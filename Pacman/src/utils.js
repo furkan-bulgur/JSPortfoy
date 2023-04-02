@@ -1,3 +1,79 @@
+//#region StateTree
+class State{
+    constructor(pacmanCoor, foodCoors){
+        this.pacmanCoor = pacmanCoor;
+        this.foodCoors = foodCoors;
+    }
+}
+
+class StateTree{
+    constructor(){
+        this.visited = new Map();
+        this.rootNode = null;
+    }
+
+    has(state){
+        return this.visited.has(JSON.stringify(state));
+    }
+
+    getNode(state){
+        if(this.has(state)){
+            return this.visited.get(JSON.stringify(state));
+        }else{
+            return null;
+        }
+    } 
+
+    getCost(state){
+        const node = this.getNode(state);
+        if(node){
+            return node.cost;
+        }
+    }
+
+    add(parentState, state, cost){
+        if(this.has(state)) return;
+
+        const parentNode = this.getNode(parentState);
+        let newNode = null;
+        const stateStr = JSON.stringify(state);
+
+        if(parentNode == null && this.rootNode == null){
+            newNode = new StateTreeNode(parentNode, state, cost);
+            this.rootNode = newNode;
+            this.visited.set(stateStr, newNode);
+        }
+        else if(parentNode != null){
+            newNode = new StateTreeNode(parentNode, state, cost);
+            this.visited.set(stateStr, newNode);
+        }
+    }
+}
+
+class StateTreeNode{
+    constructor(parentNode, state, cost){
+        this.parentNode = parentNode;
+        this.state = state;
+        this.cost = cost;
+    }
+}
+
+class StateTreePathFinder{
+    static getStateFromRoot(stateTree, state){
+        const path = [];
+        path.push(state);
+        let node = stateTree.getNode(state);
+        while(node != null && node.parentNode != null){
+            node = node.parentNode;
+            if(node == null && node.state == null) break;
+            path.push(node.state);
+        }
+        return path;
+    }
+}
+//#endregion
+
+//#region PathTree
 class PathTree{
     constructor(){
         this.visited = new Map();
@@ -62,6 +138,7 @@ class PathTreePathFinder{
         return path;
     }
 }
+//#endregion
 
 class PriorityQueue{
 // Least priority is most significant
