@@ -19,9 +19,15 @@ class PacmanAI{
     }
 
     calculatePath(){
-        const {path, visitedList} = this.algorithm.searchPathToFood(this.pacman.currentCell);
-        this.path = path;
-        this.visitedList = visitedList;
+        let searchResult;
+        if(Game.instance.foodManager.foodAmount > 1){
+            searchResult = this.algorithm.searchPathToAllFoods(this.pacman.currentCell);
+        }
+        else{
+            searchResult = this.algorithm.searchPathToFood(this.pacman.currentCell);
+            this.visitedList = searchResult.visitedList;
+        }
+        this.path = searchResult.path;
     }
 
     aiUpdate(){

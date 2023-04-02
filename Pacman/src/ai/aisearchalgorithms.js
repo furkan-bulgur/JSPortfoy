@@ -33,6 +33,39 @@ class BFS extends SearchAlgorithm{
             visitedList: visitedVisualizationList,
         };
     }
+
+    searchPathToAllFoods(startCell){
+        const foodManager = Game.instance.foodManager;
+        const startState = new State(startCell.coordinate, foodManager.getAllFoodsCoordinates());
+        let frontier = [[null, startState]];
+        let visitedStateTree = new StateTree();
+
+        while(frontier.length > 0){
+            let [parent, currentState] = frontier.shift();
+
+            if(visitedStateTree.has(currentState)) continue;
+            visitedStateTree.add(parent, currentState, -1);
+
+            if(!currentState.foodCoordinates.length){
+                return {
+                    path: StateTreePathFinder.getPathFromRoot(Game.instance.grid, visitedStateTree, currentState),
+                };
+            }
+            
+            const pacmanCell = Game.instance.grid.getCell(currentState.pacmanCoordinate);
+
+            pacmanCell.getNeighborCellsWithType(CellTypes.Empty).forEach(cell => {
+                const newFoodCoordinates = currentState.foodCoordinates.filter(coor => coor.x != cell.coordinate.x || coor.y != cell.coordinate.y);
+                const newState = new State(cell.coordinate, newFoodCoordinates);
+                if(!visitedStateTree.has(newState)) {
+                    frontier.push([currentState, newState]);
+                }
+            });
+        }
+        return {
+            path: []
+        };
+    }
 }
 
 class AStar extends SearchAlgorithm{

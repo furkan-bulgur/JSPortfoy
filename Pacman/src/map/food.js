@@ -56,6 +56,10 @@ class FoodManager{
             this.addFoodRandomly();
         }
     }
+
+    getAllFoodsCoordinates(){
+        return this.foodCells.map(cell => cell.coordinate);
+    }
 }
 
 class Food{

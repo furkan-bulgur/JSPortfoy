@@ -1,8 +1,8 @@
 //#region StateTree
 class State{
     constructor(pacmanCoor, foodCoors){
-        this.pacmanCoor = pacmanCoor;
-        this.foodCoors = foodCoors;
+        this.pacmanCoordinate = pacmanCoor;
+        this.foodCoordinates = foodCoors;
     }
 }
 
@@ -59,14 +59,14 @@ class StateTreeNode{
 }
 
 class StateTreePathFinder{
-    static getStateFromRoot(stateTree, state){
+    static getPathFromRoot(grid, stateTree, state){
         const path = [];
-        path.push(state);
         let node = stateTree.getNode(state);
+        path.push(grid.getCell(node.state.pacmanCoordinate));
         while(node != null && node.parentNode != null){
             node = node.parentNode;
             if(node == null && node.state == null) break;
-            path.push(node.state);
+            path.push(grid.getCell(node.state.pacmanCoordinate));
         }
         return path;
     }
