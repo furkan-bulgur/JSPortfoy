@@ -2,8 +2,8 @@ class LevelData{
     constructor(rawGridMatrix, levelSize){
         this.rawGridMatrix = rawGridMatrix;
         this.levelSize = levelSize;
-        this.pacmanCoor = null;
-        this.ghostCoor = null;
+        this.pacmanCoordinate = null;
+        this.ghosts = [];
         this.gridMatrix = [];
         this.initialize();
     }
@@ -25,11 +25,19 @@ class LevelData{
                         break;
                     case "p":
                         cellType = CellTypes.Empty;
-                        this.pacmanCoor = {x: j, y: i};
+                        this.pacmanCoordinate = {x: j, y: i};
                         break;
                     case "g":
                         cellType = CellTypes.Empty;
-                        this.ghostCoor = {x: j, y: i};
+                        this.ghosts.push([{x: j, y: i}, GhostAITypes.None]);
+                        break;
+                    case "v":
+                        cellType = CellTypes.Empty;
+                        this.ghosts.push([{x: j, y: i}, GhostAITypes.Vertical]);
+                        break;
+                    case "h":
+                        cellType = CellTypes.Empty;
+                        this.ghosts.push([{x: j, y: i}, GhostAITypes.Horizontal]);
                         break;
                     default:
                         cellType = CellTypes.Empty;

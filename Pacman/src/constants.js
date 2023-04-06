@@ -20,6 +20,12 @@ const PacmanAITypes = {
     AStar: "AStar"
 }
 
+const GhostAITypes = {
+    None: "None",
+    Vertical: "Vertical",
+    Horizontal: "Horizontal"
+}
+
 const CellTypes = {
     None: 0,
     Empty: 1,

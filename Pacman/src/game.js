@@ -23,21 +23,26 @@ class Game{
         this.grid = new Grid(this.levelData);
 
         this.initializePacman();
-        this.initializeGhost();
+        this.initializeGhosts();
         
         this.setManagers();
         this.setCanvas();
     }
 
     initializePacman(){
-        if(!this.levelData.pacmanCoor) return;
-        this.pacman = new Pacman(this.grid.getCell(this.levelData.pacmanCoor), Game.startDirection);
+        if(!this.levelData.pacmanCoordinate) return;
+        this.pacman = new Pacman(this.grid.getCell(this.levelData.pacmanCoordinate), Game.startDirection);
         this.pacmanManager = this.gameStrategy.getPacmanManager(this.pacman);
     }
 
-    initializeGhost(){
-        if(!this.levelData.ghostCoor) return;
-        this.ghost = new Ghost(this.grid.getCell(this.levelData.ghostCoor), Game.startDirection);
+    initializeGhosts(){
+        this.ghosts = []
+        this.ghostManagers = [];
+        this.levelData.ghosts.forEach(ghost => {
+            const ghostInstance = new Ghost(this.grid.getCell(ghost[0]), Game.startDirection);
+            this.ghosts.push(ghostInstance);
+            this.ghostManagers.push(new GhostManager(ghostInstance, ghost[1]));
+        });
     }
 
     setGameStrategy(){

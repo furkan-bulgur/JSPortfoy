@@ -66,6 +66,7 @@ class AStarOneFoodGameStrategy extends GameStrategy{
 class UserSimpleGhostOneFoodGameStrategy extends GameStrategy{
     constructor(){
         super(GameTypes.UserSimpleGhostOneFood);
+        this.foodAmount = 5;
     }
 
     getPacmanManager(pacman){

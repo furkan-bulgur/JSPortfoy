@@ -16,4 +16,10 @@ class Character{
         this.currentCell = nextCell;
         this.currentCell.addCharacterOnCell(this);
     }
+
+    canMove(direction){
+        this.direction = direction;
+        const nextCell = this.currentCell.neighborCells[direction];
+        return nextCell && nextCell.type != CellTypes.Wall;
+    }
 }
