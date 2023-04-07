@@ -93,7 +93,7 @@ class BFS extends PathSearchAlgorithm{
 
     searchPathToAllFoods(startCell){
         const foodManager = Game.instance.foodManager;
-        const startState = new State(startCell.coordinate, foodManager.getAllFoodsCoordinates());
+        const startState = new State(startCell.coordinate, [], foodManager.getAllFoodsCoordinates());
         let frontier = [[null, startState]];
         let visitedStateTree = new StateTree();
 
@@ -113,7 +113,7 @@ class BFS extends PathSearchAlgorithm{
 
             pacmanCell.getNeighborCellsWithType(CellTypes.Empty).forEach(cell => {
                 const newFoodCoordinates = currentState.foodCoordinates.filter(coor => coor.x != cell.coordinate.x || coor.y != cell.coordinate.y);
-                const newState = new State(cell.coordinate, newFoodCoordinates);
+                const newState = new State(cell.coordinate, [], newFoodCoordinates);
                 if(!visitedStateTree.has(newState)) {
                     frontier.push([currentState, newState]);
                 }
@@ -179,5 +179,19 @@ class AStar extends PathSearchAlgorithm{
 class Minimax extends SearchAlgorithm{
     getMovementDirection(pacman){   
         return null;
+    }
+
+    getMax(state, score){
+        return {
+            direction: null,
+            score: score
+        }
+    }
+
+    getMin(state, score){
+        return {
+            direction: null,
+            score: score
+        }
     }
 }
