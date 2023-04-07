@@ -118,3 +118,12 @@ class AStar extends SearchAlgorithm{
         return Math.abs(distanceX) + Math.abs(distanceY);
     }
 }
+
+class Minimax extends SearchAlgorithm{
+    searchPathToFood(startCell){   
+        return {
+            path: [],
+            visitedList: [],
+        };
+    }
+}

@@ -13,6 +13,9 @@ class PacmanAI{
             case PacmanAITypes.AStar:
                 this.algorithm = new AStar();
                 break;
+            case PacmanAITypes.Minimax:
+                this.algorithm = new Minimax();
+                break;
             default:
                 break;
         }

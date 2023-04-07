@@ -73,3 +73,13 @@ class UserSimpleGhostOneFoodGameStrategy extends GameStrategy{
         return new PacmanManager(pacman, PacmanAITypes.User);
     }
 }
+
+class MinimaxSimpleGhostOneFoodGameStrategy extends GameStrategy{
+    constructor(){
+        super(GameTypes.MinimaxSimpleGhostOneFood);
+    }
+
+    getPacmanManager(pacman){
+        return new PacmanManager(pacman, PacmanAITypes.Minimax);
+    }
+}

@@ -44,4 +44,13 @@ const gameModels = [
             eatScore: 10
         }
     },
+    {
+        name: "Minimax Simple Ghost One Food",
+        type: GameTypes.MinimaxSimpleGhostOneFood,
+        scoreProperties: {
+            initialScore: 300,
+            moveScore: -1,
+            eatScore: 10
+        }
+    }
 ]

@@ -11,13 +11,15 @@ const GameTypes = {
     BFSOneFood: "BFSOneFood",
     BFSMultipleFood: "BFSMultipleFood",
     AStarOneFood: "AStarOneFood",
-    UserSimpleGhostOneFood: "UserSimpleGhostOneFood"
+    UserSimpleGhostOneFood: "UserSimpleGhostOneFood",
+    MinimaxSimpleGhostOneFood: "MinimaxSimpleGhostOneFood"
 }
 
 const PacmanAITypes = {
     User: "User",
     BFS: "BFS",
-    AStar: "AStar"
+    AStar: "AStar",
+    Minimax: "Minimax"
 }
 
 const GhostAITypes = {

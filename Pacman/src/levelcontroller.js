@@ -14,6 +14,7 @@ class LevelController{
                 this.levelModels = [levelModel1,levelModel2,levelModel3,levelModel4,levelModel5]
                 break;
             case GameTypes.UserSimpleGhostOneFood:
+            case GameTypes.MinimaxSimpleGhostOneFood:
                 this.levelModels = [levelModel6]
                 break;
             default:
@@ -29,6 +30,7 @@ class LevelController{
             case GameTypes.AStarOneFood:
                 return 5;
             case GameTypes.UserSimpleGhostOneFood:
+            case GameTypes.MinimaxSimpleGhostOneFood:
                 return 1;
         }
     }

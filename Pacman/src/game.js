@@ -62,6 +62,9 @@ class Game{
             case GameTypes.UserSimpleGhostOneFood:
                 this.gameStrategy = new UserSimpleGhostOneFoodGameStrategy();
                 break;
+            case GameTypes.MinimaxSimpleGhostOneFood:
+                this.gameStrategy = new MinimaxSimpleGhostOneFoodGameStrategy();
+                break;
         }
     }
 
