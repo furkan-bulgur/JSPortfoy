@@ -1,8 +1,9 @@
 //#region StateTree
 class State{
-    constructor(pacmanCoor, foodCoors){
-        this.pacmanCoordinate = pacmanCoor;
-        this.foodCoordinates = foodCoors;
+    constructor(pacmanCoordinate, ghostCoordinates, foodCoordinates){
+        this.pacmanCoordinate = pacmanCoordinate;
+        this.ghostCoordinates = ghostCoordinates;
+        this.foodCoordinates = foodCoordinates;
     }
 }
 
