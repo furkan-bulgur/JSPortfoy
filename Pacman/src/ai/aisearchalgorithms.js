@@ -1,7 +1,64 @@
 class SearchAlgorithm{
+    getMovementDirection(pacman){
+        return null;
+    }
 }
 
-class BFS extends SearchAlgorithm{
+class PathSearchAlgorithm extends SearchAlgorithm{
+    constructor(){
+        super();
+        this.path = [];
+        this.visitedList = [];
+        this.visualizer = new PathVisualizer();
+    }
+
+    getMovementDirection(pacman){
+        return this.getNextDirection(pacman);
+    }
+
+    calculatePath(pacmanCell){
+        let searchResult;
+        if(Game.instance.foodManager.foodAmount > 1){
+            searchResult = this.searchPathToAllFoods(pacmanCell);
+        }
+        else{
+            searchResult = this.searchPathToFood(pacmanCell);
+            this.visitedList = searchResult.visitedList;
+        }
+        this.path = searchResult.path;
+    }
+
+    getNextDirection(pacman){
+        let direction = null;
+        if(!this.path.length){
+            this.visualizer.endVisualization();
+            this.calculatePath(pacman.currentCell);
+            this.visualizer.tryStartVisualization(this.path, this.visitedList);
+        }
+
+        if(this.visualizer.isVisualizationFinished && this.path.length){
+            let nextCell = this.path.pop();
+            if(nextCell == pacman.currentCell){
+                nextCell = this.path.pop();
+            }
+            direction = this.getDirectionToCell(nextCell, pacman)
+        }
+        return direction;
+    }
+
+    getDirectionToCell(targetCell, pacman){
+        let resultDirection = null;
+        const pacmanCell = pacman.currentCell;
+        Object.keys(pacmanCell.neighborCells).forEach(direction => {
+            if(pacmanCell.neighborCells[direction] == targetCell){
+                resultDirection = direction;
+            }
+        });
+        return resultDirection;
+    }
+}
+
+class BFS extends PathSearchAlgorithm{
     searchPathToFood(startCell){
         let frontier = [[null, startCell]];
         let visitedPathTree = new PathTree();
@@ -68,7 +125,7 @@ class BFS extends SearchAlgorithm{
     }
 }
 
-class AStar extends SearchAlgorithm{
+class AStar extends PathSearchAlgorithm{
     searchPathToFood(startCell){
         let frontier = new PriorityQueue();
         frontier.enqueue([null, startCell, 0],0);
@@ -120,10 +177,7 @@ class AStar extends SearchAlgorithm{
 }
 
 class Minimax extends SearchAlgorithm{
-    searchPathToFood(startCell){   
-        return {
-            path: [],
-            visitedList: [],
-        };
+    getMovementDirection(pacman){   
+        return null;
     }
 }

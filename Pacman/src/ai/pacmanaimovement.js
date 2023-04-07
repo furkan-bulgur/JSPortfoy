@@ -2,9 +2,6 @@ class PacmanAI{
     constructor(pacman, aiType){
         this.pacman = pacman;
         this.algorithm = null;
-        this.path = [];
-        this.visitedList = [];
-        this.visualizer = new PathVisualizer();
 
         switch (aiType) {
             case PacmanAITypes.BFS:
@@ -21,41 +18,9 @@ class PacmanAI{
         }
     }
 
-    calculatePath(){
-        let searchResult;
-        if(Game.instance.foodManager.foodAmount > 1){
-            searchResult = this.algorithm.searchPathToAllFoods(this.pacman.currentCell);
-        }
-        else{
-            searchResult = this.algorithm.searchPathToFood(this.pacman.currentCell);
-            this.visitedList = searchResult.visitedList;
-        }
-        this.path = searchResult.path;
-    }
-
     aiUpdate(){
-        if(!this.path.length){
-            this.visualizer.endVisualization();
-            this.calculatePath();
-            this.visualizer.tryStartVisualization(this.path, this.visitedList);
-        }
-
-        if(this.visualizer.isVisualizationFinished && this.path.length){
-            let nextCell = this.path.pop();
-            if(nextCell == this.pacman.currentCell){
-                nextCell = this.path.pop();
-            }
-            this.movePacmanToCell(nextCell);
-        }
-    }
-
-    movePacmanToCell(targetCell){
-        const pacmanCell = this.pacman.currentCell;
-        Object.keys(pacmanCell.neighborCells).forEach(direction => {
-            if(pacmanCell.neighborCells[direction] == targetCell){
-                this.pacman.move(direction);
-            }
-        })
+        const direction = this.algorithm.getMovementDirection(this.pacman);
+        if(direction) this.pacman.move(direction);
     }
 }
 
