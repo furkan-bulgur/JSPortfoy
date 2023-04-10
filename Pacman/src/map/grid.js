@@ -66,6 +66,29 @@ class Grid{
         }
     }
 
+    getNeighborCoordinate(coordinate, direction){
+        const newCoordinate = {x:coordinate.x, y:coordinate.y};
+        switch(direction){
+            case Directions.Up:
+                newCoordinate.y -= 1;
+                break;
+            case Directions.Down:
+                newCoordinate.y += 1;
+                break;
+            case Directions.Left:
+                newCoordinate.x -= 1;
+                break;
+            case Directions.Right:
+                newCoordinate.x += 1;
+                break;
+        }
+
+        if(newCoordinate.x < 0 || newCoordinate.x > this.levelSize.width-1 || newCoordinate.y < 0 || newCoordinate.y > this.levelSize.height-1 ){
+            return null;
+        }
+        return newCoordinate;
+    }
+
     getCell(coordinate){
         return this.cellMatrix[coordinate.y][coordinate.x];
     }
