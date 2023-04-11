@@ -65,4 +65,8 @@ class GameState{
 
         return states;
     }
+
+    isTerminal(){
+        return !this.foodCoordinates.length || this.score < 0;
+    }
 }
