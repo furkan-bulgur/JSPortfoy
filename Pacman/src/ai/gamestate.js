@@ -4,7 +4,7 @@ class GameState{
         this.pacmanCoordinate = pacmanCoordinate;
         this.ghostCoordinates = ghostCoordinates;
         this.foodCoordinates = foodCoordinates;
-        this.scoreProperties = Game.instance.levelModel.scoreProperties;
+        this.scoreProperties = Game.instance.levelModel.levelScoreProperties;
         this.score = score;
     }
 
@@ -40,7 +40,9 @@ class GameState{
                 }
             })        
             
-            states.push(new GameState(newPacmanCoordinate, this.ghostCoordinates, newFoodCoordinates, newScore));     
+            const newGameState = new GameState(newPacmanCoordinate, this.ghostCoordinates, newFoodCoordinates, newScore);
+
+            states.push([newGameState, direction]);     
         })
         return states;
     }

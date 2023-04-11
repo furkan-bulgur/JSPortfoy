@@ -1,5 +1,5 @@
 class SearchAlgorithm{
-    getMovementDirection(pacman){
+    getMovementDirection(){
         return null;
     }
 }
@@ -12,8 +12,8 @@ class PathSearchAlgorithm extends SearchAlgorithm{
         this.visualizer = new PathVisualizer();
     }
 
-    getMovementDirection(pacman){
-        return this.getNextDirection(pacman);
+    getMovementDirection(){
+        return this.getNextDirection(Game.instance.pacman);
     }
 
     calculatePath(pacmanCell){
@@ -177,21 +177,63 @@ class AStar extends PathSearchAlgorithm{
 }
 
 class Minimax extends SearchAlgorithm{
-    getMovementDirection(pacman){   
-        return null;
+    getMovementDirection(){   
+        const currentState = Game.instance.getCurrentGameState();
+        const startTime = new Date();
+        console.log("Algorithm start");
+        const [score, direction] = this.getMax(currentState);
+        const endTime = new Date();
+        console.log("Algorithm end");
+        console.log("Time: " + endTime-startTime);
+        return direction;
+    }   
+
+    getMax(state){
+        if(state.isTerminal()){
+            return [state.score, null];
+        }
+
+        const possibleStatesAndDirections = state.getPossibleStatesForPacman();
+
+        if(!possibleStatesAndDirections.length){
+            return [state.score, null];
+        }
+
+        let maxScore = Number.NEGATIVE_INFINITY;
+        let resultDirection = null;
+
+        possibleStatesAndDirections.forEach(possibleStateAndDirection => {
+            const [possibleState, direction] = possibleStateAndDirection;
+            const score = this.getMin(possibleState);
+            if(score > maxScore){
+                maxScore = score;
+                resultDirection = direction;
+            }
+        });
+        
+        return [maxScore, resultDirection];
     }
 
-    getMax(state, score){
-        return {
-            direction: null,
-            score: score
+    getMin(state){
+        if(state.isTerminal()){
+            return state.score;
         }
-    }
 
-    getMin(state, score){
-        return {
-            direction: null,
-            score: score
+        const possibleStates = state.getPossibleStatesForGhost(0);
+
+        if(!possibleStates.length){
+            return state.score;
         }
+
+        let minScore = Number.POSITIVE_INFINITY;
+
+        possibleStates.forEach(possibleState => {
+            const [score, d] = this.getMax(possibleState);
+            if(score < minScore){
+                minScore = score;
+            }
+        });
+        
+        return minScore;
     }
 }

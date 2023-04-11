@@ -72,6 +72,13 @@ class Game{
         this.scoreManager = this.gameStrategy.getScoreManager();
         this.foodManager = this.gameStrategy.getFoodManager(this.grid);
     }
+    
+    getCurrentGameState(){
+        const ghostCoordinates = this.ghosts.map(ghost => ghost.currentCell.coordinate);
+        const foodCoordinates = this.foodManager.foodCells.map(cell => cell.coordinate);
+
+        return new GameState(this.pacman.currentCell.coordinate, ghostCoordinates, foodCoordinates, this.scoreManager.score);
+    }
 
     startGame(){
         const loop = (game) => () => (game.gameLoop())
