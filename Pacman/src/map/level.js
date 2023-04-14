@@ -20,8 +20,8 @@ const levelSize1 = {
 const levelModel1 = {
     level: level1,
     levelSize: levelSize1,
-    score: 300,
     levelScoreProperties: {
+        score: 300,
         moveScore: -1,
         eatScore: 10
     }
@@ -54,8 +54,8 @@ const levelSize2 = {
 const levelModel2 = {
     level: level2,
     levelSize: levelSize2,
-    score: 300,
     levelScoreProperties: {
+        score: 300,
         moveScore: -1,
         eatScore: 10
     }
@@ -88,8 +88,8 @@ const levelSize3 = {
 const levelModel3 = {
     level: level3,
     levelSize: levelSize3,
-    score: 300,
     levelScoreProperties: {
+        score: 300,
         moveScore: -1,
         eatScore: 10
     }
@@ -127,8 +127,8 @@ const levelSize4 = {
 const levelModel4 = {
     level: level4,
     levelSize: levelSize4,
-    score: 300,
     levelScoreProperties: {
+        score: 300,
         moveScore: -1,
         eatScore: 10
     }
@@ -176,8 +176,8 @@ const levelSize5 = {
 const levelModel5 = {
     level: level5,
     levelSize: levelSize5,
-    score: 300,
     levelScoreProperties: {
+        score: 300,
         moveScore: -1,
         eatScore: 10
     }
@@ -202,8 +202,8 @@ const levelSize6 = {
 const levelModel6 = {
     level: level6,
     levelSize: levelSize6,
-    score: 300,
     levelScoreProperties: {
+        score: 300,
         moveScore: -1,
         eatScore: 10
     }

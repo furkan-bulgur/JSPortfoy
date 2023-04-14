@@ -21,7 +21,7 @@ class Pacman extends Character{
     }
 
     die(){
-        Game.instance.gameOver();
+        Game.instance.loseGame();
     }
 
     draw(){

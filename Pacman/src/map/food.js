@@ -1,11 +1,13 @@
 class FoodManager{
     static foodCount = 0;
     
-    constructor(grid, foodAmount){
+    constructor(grid, foodAmount, shouldAutoFill){
         this.grid = grid;
         this.foodAmount = foodAmount;
         this.foodCells = [];
+        this.shouldAutoFill = shouldAutoFill;
         Game.instance.addUpdateListener(this);
+        this.addFoodRandomly();
     }
 
     reset(){
@@ -52,8 +54,11 @@ class FoodManager{
     }
 
     update(){
-        if(!FoodManager.foodCount){
+        if(!FoodManager.foodCount && this.shouldAutoFill){
             this.addFoodRandomly();
+        }
+        else if(!FoodManager.foodCount){
+            Game.instance.winGame();
         }
     }
 

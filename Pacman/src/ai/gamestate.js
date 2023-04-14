@@ -4,7 +4,7 @@ class GameState{
         this.pacmanCoordinate = pacmanCoordinate;
         this.ghostCoordinates = ghostCoordinates;
         this.foodCoordinates = foodCoordinates;
-        this.scoreProperties = Game.instance.levelModel.levelScoreProperties;
+        this.scoreProperties = Game.instance.scoreProperties;
         this.score = score;
     }
 

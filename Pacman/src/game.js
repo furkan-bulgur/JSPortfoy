@@ -6,7 +6,7 @@ class Game{
     static instance = Game.#instance ? Game.#instance : new Game();
     static startDirection = Directions.Right;
     static gameLoopInterval = 20;
-    static aiUpdateInterval = 1000;
+    static aiUpdateInterval = 100;
 
     constructor(){
         Game.#instance = this;
@@ -21,6 +21,7 @@ class Game{
         this.levelController = levelController;
         this.setGameStrategy();
         this.levelModel = levelController.selectedLevelModel;
+        this.scoreProperties = this.levelModel.levelScoreProperties;
         this.levelData = new LevelData(this.levelModel.level, this.levelModel.levelSize);
         this.grid = new Grid(this.levelData);
 
@@ -82,6 +83,14 @@ class Game{
         return new GameState(this.pacman.currentCell.coordinate, ghostCoordinates, foodCoordinates, this.scoreManager.score);
     }
 
+    onScoreBecomeZeroOrLower(){
+        this.loseGame();
+    }
+
+    onAllFoodsAreEaten(){
+        this.winGame();
+    }
+
     startGame(){
         const loop = (game) => () => (game.gameLoop())
         const aiUpdate = (game) => () => (game.aiUpdate());
@@ -98,9 +107,14 @@ class Game{
         this.foodManager.reset();
     }
 
-    gameOver(){
+    loseGame(){
         this.stopGame();
         this.scoreManager.showGameOverText();
+    }
+
+    winGame(){
+        this.stopGame();
+        this.scoreManager.showGameWonText();
     }
 
     setCanvas(){

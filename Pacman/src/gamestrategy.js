@@ -14,7 +14,7 @@ class GameStrategy{
     }
 
     getScoreManager(){
-        return new ScoreManager(this.gameModel.scoreProperties);
+        return new ScoreManager(Game.instance.scoreProperties);
     }
 
     getFoodManager(grid){
