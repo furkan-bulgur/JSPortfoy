@@ -5,6 +5,8 @@ class Game{
     static #instance;
     static instance = Game.#instance ? Game.#instance : new Game();
     static startDirection = Directions.Right;
+    static gameLoopInterval = 20;
+    static aiUpdateInterval = 1000;
 
     constructor(){
         Game.#instance = this;
@@ -83,8 +85,8 @@ class Game{
     startGame(){
         const loop = (game) => () => (game.gameLoop())
         const aiUpdate = (game) => () => (game.aiUpdate());
-        this.loopInterval = setInterval(loop(this), gameLoopInterval);
-        this.aiInterval = setInterval(aiUpdate(this), aiUpdateInterval);
+        this.loopInterval = setInterval(loop(this), Game.gameLoopInterval);
+        this.aiInterval = setInterval(aiUpdate(this), Game.aiUpdateInterval);
     }
 
     stopGame(){
