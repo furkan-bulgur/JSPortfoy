@@ -6,7 +6,7 @@ class Game{
     static instance = Game.#instance ? Game.#instance : new Game();
     static startDirection = Directions.Right;
     static gameLoopInterval = 20;
-    static aiUpdateInterval = 100;
+    static aiUpdateInterval = 250;
 
     constructor(){
         Game.#instance = this;

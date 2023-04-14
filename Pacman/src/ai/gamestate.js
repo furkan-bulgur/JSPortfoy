@@ -21,12 +21,12 @@ class GameState{
         const states = [];
 
         directions.forEach(direction => {
-            const newScore = this.score + this.scoreProperties.moveScore;
+            let newScore = this.score + this.scoreProperties.moveScore;
             const newPacmanCoordinate = this.grid.getNeighborCoordinate(this.pacmanCoordinate, direction);
             const newFoodCoordinates = [];
 
             this.foodCoordinates.forEach(coordinate => {
-                if(coordinate == newPacmanCoordinate){
+                if(this.isCoordinatesEqual(coordinate, newPacmanCoordinate)){
                     newScore += this.scoreProperties.eatScore;
                 }
                 else{
@@ -35,7 +35,7 @@ class GameState{
             });
 
             this.ghostCoordinates.forEach(ghostCoordinate => {
-                if(ghostCoordinate == newPacmanCoordinate){
+                if(this.isCoordinatesEqual(ghostCoordinate, newPacmanCoordinate)){
                     newScore = -1;
                 }
             })        
@@ -50,7 +50,7 @@ class GameState{
     getPossibleStatesForGhost(index){
         const ghostCoordinate = this.ghostCoordinates[index];
         const newGhostCoordinates = [...this.ghostCoordinates];
-        const newScore = this.score;
+        let newScore = this.score;
         const directions = this.getPossibleDirectionForCharacter(ghostCoordinate);
         const states = [];
 
@@ -58,7 +58,7 @@ class GameState{
             const newGhostCoordinate = this.grid.getNeighborCoordinate(ghostCoordinate, direction);
             newGhostCoordinates[index] = newGhostCoordinate;
 
-            if(newGhostCoordinate == this.pacmanCoordinate){
+            if(this.isCoordinatesEqual(newGhostCoordinate, this.pacmanCoordinate)){
                 newScore = -1;
             }
 
@@ -69,6 +69,10 @@ class GameState{
     }
 
     isTerminal(){
-        return !this.foodCoordinates.length || this.score < 0;
+        return !this.foodCoordinates.length || this.score <= 0;
+    }
+
+    isCoordinatesEqual(coor1, coor2){
+        return coor1.x == coor2.x && coor1.y == coor2.y;
     }
 }
