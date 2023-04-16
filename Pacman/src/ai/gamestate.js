@@ -18,10 +18,18 @@ class GameState{
 
     getPossibleStatesForPacman(){
         const directions = this.getPossibleDirectionForCharacter(this.pacmanCoordinate);
+        directions.push(null);
         const states = [];
 
         directions.forEach(direction => {
             let newScore = this.score + this.scoreProperties.moveScore;
+            let newGameState = null;
+            if(!direction){
+                newGameState = new GameState(this.pacmanCoordinate, this.ghostCoordinates, this.foodCoordinates, newScore);
+                states.push([newGameState, direction]);     
+                return;
+            }
+
             const newPacmanCoordinate = this.grid.getNeighborCoordinate(this.pacmanCoordinate, direction);
             const newFoodCoordinates = [];
 
@@ -40,10 +48,10 @@ class GameState{
                 }
             })        
             
-            const newGameState = new GameState(newPacmanCoordinate, this.ghostCoordinates, newFoodCoordinates, newScore);
+            newGameState = new GameState(newPacmanCoordinate, this.ghostCoordinates, newFoodCoordinates, newScore);
 
             states.push([newGameState, direction]);     
-        })
+        });
         return states;
     }
 
