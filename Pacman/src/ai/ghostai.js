@@ -1,11 +1,40 @@
 class GhostAI{
     constructor(ghost){
         this.ghost = ghost;
+        this.state = this.createAIState(this.ghost);
+    }
+
+    createAIState(ghost){
+        return null;
     }
 
     aiUpdate(){
-
+        this.ghost.move(this.state.getNextDirection()); 
     }
+}
+
+class NoneGhostAI extends GhostAI{
+    
+}
+
+class VerticalGhostAI extends GhostAI{
+    createAIState(ghost){
+        return new VerticalGhostAIState(ghost);
+    }
+}
+
+class HorizontalGhostAI extends GhostAI{
+    createAIState(ghost){
+        return new HorizontalGhostAIState(ghost);
+    }
+}
+
+class GhostAIState{
+    constructor(ghost){
+        this.ghost = ghost;
+    }
+
+    getNextDirection() { }
 
     getOppositeDirection(direction){
         switch (direction){
@@ -21,22 +50,30 @@ class GhostAI{
     }
 }
 
-class NoneGhostAI extends GhostAI{
-    
-}
+class LinearGhostAIState extends GhostAIState{
+    constructor(ghost){
+        super(ghost);
+        this.direction = this.getStartDirection();
+    }
 
-class VerticalGhostAI extends GhostAI{
-    direction = Directions.Up;
-    aiUpdate(){
+    getStartDirection(){
+        return Directions.Down;
+    }
+
+    getNextDirection(){
         this.direction = this.ghost.canMove(this.direction) ? this.direction : this.getOppositeDirection(this.direction);
-        this.ghost.move(this.direction); 
+        return this.direction;
     }
 }
 
-class HorizontalGhostAI extends GhostAI{
-    direction = Directions.Right;
-    aiUpdate(){
-        this.direction = this.ghost.canMove(this.direction) ? this.direction : this.getOppositeDirection(this.direction);
-        this.ghost.move(this.direction); 
+class VerticalGhostAIState extends LinearGhostAIState{
+    getStartDirection(){
+        return Directions.Up;
+    }
+}
+
+class HorizontalGhostAIState extends LinearGhostAIState{
+    getStartDirection(){
+        return Directions.Right;
     }
 }
