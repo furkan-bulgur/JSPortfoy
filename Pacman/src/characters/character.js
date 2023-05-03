@@ -22,4 +22,27 @@ class Character{
         const nextCell = this.currentCell.neighborCells[direction];
         return nextCell && nextCell.type != CellTypes.Wall;
     }
+
+    getCharacterState(){
+        return new CharacterState(this.currentCell);
+    }
+}
+
+class CharacterState{
+    constructor(currentCell){
+        this.currentCell = currentCell;
+    }
+
+    move(direction){
+        const nextCell = this.currentCell.neighborCells[direction];
+        if(!nextCell || nextCell.type == CellTypes.Wall) return false;
+
+        this.currentCell = nextCell;
+        return true;
+    }
+
+    canMove(direction){
+        const nextCell = this.currentCell.neighborCells[direction];
+        return nextCell && nextCell.type != CellTypes.Wall;
+    }
 }

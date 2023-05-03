@@ -1,10 +1,14 @@
 class GhostAI{
     constructor(ghost){
         this.ghost = ghost;
-        this.state = this.createAIState(this.ghost);
+        this.state = this.createAIState();
     }
 
-    createAIState(ghost){
+    createAIState(){
+        return null;
+    }
+
+    createAIStateCopy(){
         return null;
     }
 
@@ -18,14 +22,22 @@ class NoneGhostAI extends GhostAI{
 }
 
 class VerticalGhostAI extends GhostAI{
-    createAIState(ghost){
-        return new VerticalGhostAIState(ghost);
+    createAIState(){
+        return new VerticalGhostAIState(this.ghost);
+    }
+
+    createAIStateCopy(){
+        return new VerticalGhostAIState(this.ghost.getCharacterState());
     }
 }
 
 class HorizontalGhostAI extends GhostAI{
-    createAIState(ghost){
-        return new HorizontalGhostAIState(ghost);
+    createAIState(){
+        return new HorizontalGhostAIState(this.ghost);
+    }
+
+    createAIStateCopy(){
+        return new HorizontalGhostAIState(this.ghost.getCharacterState());
     }
 }
 

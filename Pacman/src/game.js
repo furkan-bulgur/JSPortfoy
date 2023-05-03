@@ -77,10 +77,10 @@ class Game{
     }
     
     getCurrentGameState(){
-        const ghostCoordinates = this.ghosts.map(ghost => ghost.currentCell.coordinate);
+        const ghostAIStateCopies = this.ghostManagers.map(ghostManager => ghostManager.ghostAI.createAIStateCopy());
         const foodCoordinates = this.foodManager.foodCells.map(cell => cell.coordinate);
 
-        return new GameState(this.pacman.currentCell.coordinate, ghostCoordinates, foodCoordinates, this.scoreManager.score);
+        return new GameState(this.pacman.currentCell.coordinate, ghostAIStateCopies, foodCoordinates, this.scoreManager.score);
     }
 
     onScoreBecomeZeroOrLower(){
