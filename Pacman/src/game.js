@@ -50,18 +50,6 @@ class Game{
 
     setGameStrategy(){
         switch(this.gameType){
-            case GameTypes.UserOneFood:
-                this.gameStrategy = new UserOneFoodGameStrategy();
-                break;
-            case GameTypes.BFSOneFood:
-                this.gameStrategy = new BFSOneFoodGameStrategy();
-                break;
-            case GameTypes.BFSMultipleFood:
-                this.gameStrategy = new BFSMultipleFoodGameStrategy();
-                break;
-            case GameTypes.AStarOneFood:
-                this.gameStrategy = new AStarOneFoodGameStrategy();
-                break;
             case GameTypes.UserSimpleGhostOneFood:
                 this.gameStrategy = new UserSimpleGhostOneFoodGameStrategy();
                 break;

@@ -21,11 +21,3 @@ function restart(){
     Game.instance.initializeGame(gameType, levelController);
     Game.instance.startGame();
 }
-
-const visualizeCalculationButton = document.getElementById("visualize-calculation-button");
-visualizeCalculationButton.onclick = visualizeCalculation;
-
-function visualizeCalculation() {
-    Game.instance.grid.resetCellColors();
-    gameParameters.visualizeCalculation = !gameParameters.visualizeCalculation;
-}

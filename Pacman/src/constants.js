@@ -7,18 +7,12 @@ const Directions = {
 
 const GameTypes = {
     None: "None",
-    UserOneFood: "UserOneFood",
-    BFSOneFood: "BFSOneFood",
-    BFSMultipleFood: "BFSMultipleFood",
-    AStarOneFood: "AStarOneFood",
     UserSimpleGhostOneFood: "UserSimpleGhostOneFood",
     MinimaxSimpleGhostOneFood: "MinimaxSimpleGhostOneFood"
 }
 
 const PacmanAITypes = {
     User: "User",
-    BFS: "BFS",
-    AStar: "AStar",
     Minimax: "Minimax"
 }
 
