@@ -1,7 +1,7 @@
 *{
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
+    font-family: 'Press Start 2P', cursive;
     text-decoration: none;
     list-style: none;
 }
@@ -14,30 +14,29 @@
     background-position: center;
 }
 
-.navbar{
+nav{
     width: 85%;
     margin: auto;
-    padding: 35px 0;
+    padding: 2em 0;
     display: flex;
-    align-items: center;
     justify-content: space-between;
 } 
 
 #pacman-header{
-    font-size: 4em;
-    font-family: 'Rubik Iso', cursive;
+    font-size: 2.5em;
     text-align: center;
     color: #ffd000;
 }
 
-.navbar ul li{
+nav ul li{
     list-style: none;
     display: inline-block;
     margin: 0 20px;
     position: relative;
+    margin-bottom: 1em;
 }
 
-.navbar ul li a{
+nav ul li a{
     text-decoration: none;
     color: #ffd000;
     text-transform: uppercase;
@@ -68,12 +67,14 @@
 }
 
 .content h1{
-    font-family: 'Rubik Iso', cursive;
     font-size: 2em;
-    margin-top: 80px;
+    margin-top: 2em;
+    margin-bottom: 1em;
 }
 
 .mode-button{
+    font-size: 12px;
+    line-height: 20px;
     width: 200px;
     padding: 15px 0;
     text-align: center;
@@ -107,92 +108,3 @@ span{
 .mode-button:hover{
     border: none;
 }
-
-.pacman-icon{
-    position: relative;
-    right: 45vh;
-    top: 25vh;
-    height: 10vh;
-    width: 100vh;
-    display: flex;
-    overflow: hidden;
-    transform: rotate(270deg);
-    align-items: center;
-}
-
-.path{
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-    animation: eating-path 0.5s linear infinite;
-}
-
-.path::before{
-    content:  "";
-    background-color: #ffd000;
-    height: 1rem;
-    width: 1rem;
-    border-radius: 50%;
-}
-
-@keyframes eating-path{
-    0%{
-        transform: translateX(50%);
-    }
-    100%{
-        transform: translateX(-50%);
-    }
-}
-
-.pacman{
-    position: relative;
-    background: transparent;
-    z-index: 1;
-}
-
-.pacman::before,
-.pacman::after{
-    content: "";
-    position: absolute;
-    top: -35px;
-    display: block;
-    border-radius: 50%;
-    height: 0px;
-    width: 0px;
-}
-
-.pacman::before{
-    animation: chunk-top 0.5s ease infinite;
-    border: 35px solid #ffd000;
-    border-left-color: transparent;
-    border-bottom-color: transparent;
-}
-
-@keyframes chunk-top {
-    0%,
-    100%{
-        transform: rotate(-45deg);
-    }
-    50%{
-        transform: rotate(-80deg);
-    }
-}
-
-.pacman::after{
-    animation: chunk-bottom 0.5s ease infinite;
-    border: 35px solid #ffd000;
-    border-right-color: transparent;
-    border-top-color: transparent;
-}
-
-@keyframes chunk-bottom {
-    0%,
-    100%{
-        transform: rotate(-40deg);
-    }
-    50%{
-        transform: rotate(0deg);
-    }
-}
-
-
